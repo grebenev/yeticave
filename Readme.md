@@ -1,7 +1,7 @@
 # Личный проект «YetiCave»
 
 * Студент: [Konstantin Grebenev](https://up.htmlacademy.ru/php/6/user/536017).
-* Наставник: `Неизвестно`.
+* Наставник: [Владислав Малиничев](https://up.htmlacademy.ru/php/6/user/415943).
 
 ---
 
