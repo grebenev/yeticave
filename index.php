@@ -71,7 +71,6 @@ function transform_format ($number) {
 <header class="main-header">
     <div class="main-header__container container">
         <h1 class="visually-hidden">YetiCave</h1>
-        <?=transform_format(100); ?>
         <a class="main-header__logo">
             <img src="img/logo.svg" width="160" height="39" alt="Логотип компании YetiCave">
         </a>
@@ -135,7 +134,7 @@ function transform_format ($number) {
                     <div class="lot__state">
                         <div class="lot__rate">
                             <span class="lot__amount">Стартовая цена</span>
-                            <span class="lot__cost"><?=transform_format($value['price']); ?><b class="rub">р</b></span>
+                            <span class="lot__cost"><?=transform_format($value['price']); ?></span>
                         </div>
                         <div class="lot__timer timer">
 
