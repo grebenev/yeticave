@@ -47,7 +47,16 @@ $items_list = [
   ]
 ];
 
+//функция
+function transform_format ($number) {
+  $integer = ceil($number);
+  if ($integer > 1000) {
+    $integer = number_format($integer, 0, '', ' ');
+  }
+  return $integer .= ' ₽';
+};
 ?>
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -62,6 +71,7 @@ $items_list = [
 <header class="main-header">
     <div class="main-header__container container">
         <h1 class="visually-hidden">YetiCave</h1>
+        <?=transform_format(100); ?>
         <a class="main-header__logo">
             <img src="img/logo.svg" width="160" height="39" alt="Логотип компании YetiCave">
         </a>
@@ -125,7 +135,7 @@ $items_list = [
                     <div class="lot__state">
                         <div class="lot__rate">
                             <span class="lot__amount">Стартовая цена</span>
-                            <span class="lot__cost"><?=$value['price']; ?><b class="rub">р</b></span>
+                            <span class="lot__cost"><?=transform_format($value['price']); ?><b class="rub">р</b></span>
                         </div>
                         <div class="lot__timer timer">
 
