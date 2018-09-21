@@ -49,6 +49,18 @@ $items_list = [
 ];
 
 
+date_default_timezone_set("Europe/Moscow");
+
+// timestamp для полуночи
+$timestamp_midnight = strtotime('tomorrow');
+
+// текущий timestap
+$secs_to_midnight = $timestamp_midnight - time();
+
+// округление часов деленое на кол-во секунд в часе.
+$hours = floor($secs_to_midnight / 3600);
+
+$minutes = floor(($secs_to_midnight % 3600) / 60);
 
 
 
@@ -63,7 +75,7 @@ function transform_format ($number) {
 
 require_once('functions.php');
 
-$content = include_template('index.php', compact('items_list', 'categories_list'));
+$content = include_template('index.php', compact('items_list', 'categories_list', 'hours', 'minutes'));
 $layout_content = include_template('layout.php', compact('content', 'is_auth', 'user_name', 'user_avatar', 'categories_list', 'title'));
 
 
