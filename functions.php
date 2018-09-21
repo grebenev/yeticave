@@ -15,3 +15,12 @@ function include_template($name, $data) {
 
     return $result;
 }
+
+
+function transform_format ($number) {
+    $integer = ceil($number);
+    if ($integer > 1000) {
+        $integer = number_format($integer, 0, '', ' ');
+    }
+    return $integer .= ' ₽';
+};
