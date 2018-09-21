@@ -59,7 +59,7 @@ $secs_to_midnight = $timestamp_midnight - time();
 
 // округление часов деленое на кол-во секунд в часе.
 $hours = floor($secs_to_midnight / 3600);
-
+// округление минут
 $minutes = floor(($secs_to_midnight % 3600) / 60);
 
 
