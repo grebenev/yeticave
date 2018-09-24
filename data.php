@@ -4,7 +4,7 @@ $user_avatar = 'img/user.jpg';
 $title = "YetiCave";
 
 //  массив категорий
-$categories_list = ['Доски и лыжи', 'Крепления', 'Ботинки', 'Одежда', 'Инструменты', 'Разное'];
+$categories_list = ['boards' => 'Доски и лыжи', 'attachment' => 'Крепления', 'boots' => 'Ботинки', 'clothing' => 'Одежда', 'tools' => 'Инструменты', 'other' => 'Разное'];
 
 // массив товаров
 $items_list = [
