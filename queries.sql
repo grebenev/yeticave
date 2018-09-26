@@ -63,9 +63,10 @@ SELECT * FROM categories;
 /*  получить самые новые, открытые лоты. Каждый лот должен включать название,
  стартовую цену, ссылку на изображение, цену, количество ставок, название категории */
 
-
-
-
+SELECT lot_name, description, start_price,  COUNT(bet.id) AS count_bets, category_name, image FROM lots
+JOIN bet ON bet.lots_id = lots.id
+JOIN categories ON lots.categories_id = categories.id
+GROUP BY lots.id ORDER BY creation_date DESC
 
 
 --  показать лот по его id. Получите также название категории, к которой принадлежит лот
@@ -73,10 +74,12 @@ SELECT * FROM categories;
 SELECT creation_date, lot_name, description, image, start_price, end_date, lot_step, category_name FROM lots
  JOIN categories ON categories.id = lots.id WHERE lots.id = 1;
 
+
 --  обновить название лота по его идентификатору
 
 UPDATE lots SET lot_name = 'Название лота 3' WHERE id = 1;
 
+
 --  получить список самых свежих ставок для лота по его идентификатору
 
-SELECT * FROM bet WHERE lots_id = 1 ORDER BY bet_date ASC;
+SELECT * FROM bet WHERE lots_id = 1 ORDER BY bet_date DESC;
