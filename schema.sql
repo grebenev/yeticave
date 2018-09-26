@@ -24,7 +24,7 @@ CREATE TABLE lots (
 );
 CREATE INDEX search_lot ON lots(lot_name);
 
-CREATE TABLE bet (
+CREATE TABLE bets (
   id INT AUTO_INCREMENT PRIMARY KEY,
   bet_date DATETIME,
   amount INT(16),

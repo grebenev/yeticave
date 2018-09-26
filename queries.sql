@@ -9,10 +9,10 @@ INSERT INTO categories SET category_name = 'Инструменты';
 INSERT INTO categories SET category_name = 'Разное';
 
 INSERT INTO lots SET creation_date = '2018-09-24 21:10:01',
-lot_name = 'Имя лота',
+lot_name = '2014 Rossignol District Snowboard',
 description = 'Описание лота',
-image = 'imgage-1.jpg',
-start_price = 100,
+image = 'lot-1.jpg',
+start_price = 10999,
 end_date = '2018-09-24',
 lot_step = 5,
 users_id = 1,
@@ -20,22 +20,66 @@ winners_id = 1,
 categories_id = 1;
 
 INSERT INTO lots SET creation_date = '2018-09-22 21:10:01',
-lot_name = 'Имя лота2',
+lot_name = 'DC Ply Mens 2016/2017 Snowboard',
 description = 'Описание лота2',
-image = 'imgage-2.jpg',
-start_price = 200,
+image = 'lot-2.jpg',
+start_price = 159999,
+end_date = '2018-09-25',
+lot_step = 3,
+users_id = 2,
+winners_id = 2,
+categories_id = 1;
+
+INSERT INTO lots SET creation_date = '2018-09-22 21:10:01',
+lot_name = 'Крепления Union Contact Pro 2015 года размер L/XL',
+description = 'Описание лота3',
+image = 'lot-3.jpg',
+start_price = 8000,
 end_date = '2018-09-25',
 lot_step = 3,
 users_id = 2,
 winners_id = 2,
 categories_id = 2;
 
-INSERT INTO bet SET bet_date = '2018-09-22 21:10:01',
+INSERT INTO lots SET creation_date = '2018-09-22 21:10:01',
+lot_name = 'Ботинки для сноуборда DC Mutiny Charocal',
+description = 'Описание лота4',
+image = 'lot-4.jpg',
+start_price = 10999,
+end_date = '2018-09-25',
+lot_step = 3,
+users_id = 2,
+winners_id = 2,
+categories_id = 3;
+
+INSERT INTO lots SET creation_date = '2018-09-22 21:10:01',
+lot_name = 'Куртка для сноуборда DC Mutiny Charocal',
+description = 'Описание лота5',
+image = 'lot-6.jpg',
+start_price = 7500,
+end_date = '2018-09-25',
+lot_step = 3,
+users_id = 2,
+winners_id = 2,
+categories_id = 6;
+
+INSERT INTO lots SET creation_date = '2018-09-22 21:10:01',
+lot_name = 'Маска Oakley Canopy',
+description = 'Описание лота6',
+image = 'lot-5.jpg',
+start_price = 5400,
+end_date = '2018-09-25',
+lot_step = 3,
+users_id = 2,
+winners_id = 2,
+categories_id = 4;
+
+INSERT INTO bets SET bet_date = '2018-09-22 21:10:01',
 amount = 1000,
 users_id = 1,
 lots_id = 1;
 
-INSERT INTO bet SET bet_date = '2018-09-23 23:10:01',
+INSERT INTO bets SET bet_date = '2018-09-23 23:10:01',
 amount = 2000,
 users_id = 2,
 lots_id = 2;
@@ -63,8 +107,8 @@ SELECT * FROM categories;
 /*  получить самые новые, открытые лоты. Каждый лот должен включать название,
  стартовую цену, ссылку на изображение, цену, количество ставок, название категории */
 
-SELECT lot_name, description, start_price,  COUNT(bet.id) AS count_bets, category_name, image FROM lots
-JOIN bet ON bet.lots_id = lots.id
+SELECT lot_name, description, start_price,  COUNT(bets.id) AS count_bets, category_name, image FROM lots
+JOIN bets ON bets.lots_id = lots.id
 JOIN categories ON lots.categories_id = categories.id
 GROUP BY lots.id ORDER BY creation_date DESC
 
@@ -82,4 +126,4 @@ UPDATE lots SET lot_name = 'Название лота 3' WHERE id = 1;
 
 --  получить список самых свежих ставок для лота по его идентификатору
 
-SELECT * FROM bet WHERE lots_id = 1 ORDER BY bet_date DESC;
+SELECT * FROM bets WHERE lots_id = 1 ORDER BY bet_date DESC;
