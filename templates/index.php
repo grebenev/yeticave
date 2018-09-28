@@ -3,9 +3,9 @@
     <p class="promo__text">На нашем интернет-аукционе ты найдёшь самое эксклюзивное сноубордическое и горнолыжное снаряжение.</p>
     <ul class="promo__list">
         <!--заполните этот список из массива категорий-->
-        <?php foreach ($categories_list as $key => $value): ?>
-            <li class="promo__item promo__item--<?=$key; ?>">
-                <a class="promo__link" href="pages/all-lots.html"><?=$value; ?></a>
+        <?php foreach ($categories_list as $key): ?>
+            <li class="promo__item promo__item--<?=$key['id']; ?>">
+                <a class="promo__link" href="pages/all-lots.html"><?=$key['category_name']; ?></a>
             </li>
         <?php endforeach; ?>
     </ul>
@@ -16,20 +16,20 @@
     </div>
     <ul class="lots__list">
         <!--заполните этот список из массива с товарами-->
-        <?php foreach ($items_list as $key => $value): ?>
+        <?php foreach ($lots_list as $key): ?>
             <li class="lots__item lot">
                 <div class="lot__image">
-                    <img src="<?=$value['image_url']; ?>" width="350" height="260" alt="">
+                    <img src="img/<?=$key['image']; ?>" width="350" height="260" alt="">
                 </div>
                 <div class="lot__info">
-                    <span class="lot__category"><?=$value['category']; ?></span>
-                    <h3 class="lot__title"><a class="text-link" href="pages/lot.html"><?=htmlspecialchars($value['name']); ?></a></h3>
+                    <span class="lot__category"><?=$key['category_name']; ?></span>
+                    <h3 class="lot__title"><a class="text-link" href="pages/lot.html"><?=htmlspecialchars($key['lot_name']); ?></a></h3>
                     <div class="lot__state">
                         <div class="lot__rate">
                             <span class="lot__amount">Стартовая цена</span>
-                            <span class="lot__cost"><?=transform_format(htmlspecialchars($value['price'])); ?></span>
+                            <span class="lot__cost"><?=transform_format(htmlspecialchars($key['start_price'])); ?></span>
                         </div>
-                        <div class="lot__timer timer"><?=$hours; ?> часов <?=$minutes; ?> минут
+                        <div class="lot__timer timer"><?=time_to_end($key['creation_date'], $key['end_date']) ?>
 
                         </div>
                     </div>

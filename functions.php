@@ -24,3 +24,16 @@ function transform_format ($number) {
     }
     return $integer .= ' ₽';
 };
+
+function time_to_end ($lot_time_create, $lot_time_end) {
+// текущий timestamp
+    $secs_to_midnight = strtotime($lot_time_end) - strtotime($lot_time_create);
+
+// округление часов деленое на кол-во секунд в часе.
+    $hours = floor($secs_to_midnight / 3600);
+
+// округление минут
+    $minutes = floor(($secs_to_midnight % 3600) / 60);
+
+    return $hours .' часов ' . $minutes . ' минут ';
+}
