@@ -14,7 +14,7 @@ if (!$link) {
 
 } else {
     // Создание запрос на получение списка категорий
-    $sql = "SELECT id, category_name FROM categories";
+    $sql = "SELECT id, category_name, class_name FROM categories";
 
     //Выполнение запроса присвоение результата переменной
     $result = mysqli_query($link, $sql);
