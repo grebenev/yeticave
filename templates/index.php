@@ -29,7 +29,7 @@
                             <span class="lot__amount">Стартовая цена</span>
                             <span class="lot__cost"><?=transform_format(htmlspecialchars($key['start_price'])); ?></span>
                         </div>
-                        <div class="lot__timer timer"><?=$hours; ?> часов <?=$minutes; ?> минут
+                        <div class="lot__timer timer"><?=time_to_end($key['creation_date'], $key['end_date']) ?>
 
                         </div>
                     </div>

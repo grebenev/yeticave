@@ -1,28 +1,16 @@
 <?php
-$is_auth = rand(0, 1);
+// $is_auth = rand(0, 1);
+$title = "YetiCave";
 
 date_default_timezone_set("Europe/Moscow");
-
-// timestamp для полуночи
-$timestamp_midnight = strtotime('tomorrow');
-
-// текущий timestap
-$secs_to_midnight = $timestamp_midnight - time();
-
-// округление часов деленое на кол-во секунд в часе.
-$hours = floor($secs_to_midnight / 3600);
-
-// округление минут
-$minutes = floor(($secs_to_midnight % 3600) / 60);
-
 
 require_once('functions.php');
 require_once('db.php');
 
+
 if (!$link) {
 
-    $error = mysqli_connect_error();
-    $content = include_template('error.php', ['error' => $error]);
+    $content = include_template('error.php', ['error' => mysqli_connect_error()]);
 
 } else {
     // Создание запрос на получение списка категорий
@@ -43,16 +31,17 @@ if (!$link) {
     $sql = "SELECT id, user_name, avatar FROM users WHERE id = 1";
     $user_result = mysqli_query($link, $sql);
 
-    if($user_result) {
+    if ($user_result) {
         $current_user = mysqli_fetch_assoc($user_result);
     } else {
         $content = include_template('error.php', ['error' => mysqli_error($link)]);
     }
     // Запрос на получение лотов
-    $sql = "SELECT lots.id, creation_date, lot_name, image, start_price, category_name FROM lots JOIN categories ON categories.id = lots.categories_id";
+    $sql = "SELECT lots.id, creation_date, end_date, lot_name, image, start_price, category_name FROM lots
+    JOIN categories ON categories.id = lots.categories_id ORDER BY creation_date DESC";
     $lots_result = mysqli_query($link, $sql);
 
-    if($lots_result) {
+    if ($lots_result) {
         $lots_list = mysqli_fetch_all($lots_result, MYSQLI_ASSOC);
     }
 }
@@ -60,7 +49,6 @@ if (!$link) {
 $content = include_template('index.php', compact('lots_list', 'categories_list', 'hours', 'minutes'));
 $layout_content = include_template('layout.php', compact('content', 'is_auth', 'current_user', 'categories_list', 'title'));
 
-
-print( $layout_content);
+print($layout_content);
 
 ?>
