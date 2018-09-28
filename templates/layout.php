@@ -23,12 +23,12 @@
 
             <nav class="user-menu">
 
-                <?php if ($is_auth): ?>
+                <?php if ($current_user['id']): ?>
                     <div class="user-menu__image">
-                        <img src="img/user.jpg" width="40" height="40" alt="<?=htmlspecialchars($user_name);; ?>">
+                        <img src="img/<?=$current_user['avatar']; ?>" width="40" height="40" alt="<?=htmlspecialchars($current_user['user_name']); ?>">
                     </div>
                     <div class="user-menu__logged">
-                        <p><?=htmlspecialchars($user_name); ?></p>
+                        <p><?=htmlspecialchars($current_user['user_name']); ?></p>
                     </div>
                 <?php else: ?>
                     <ul class="user-menu__list">
@@ -52,9 +52,9 @@
     <nav class="nav">
         <ul class="nav__list container">
             <!--заполните этот список из массива категорий-->
-            <?php foreach ($categories_list as $key => $value): ?>
+            <?php foreach ($categories_list as $key): ?>
                 <li class="nav__item">
-                    <a href="pages/all-lots.html"><?=$value;?></a>
+                    <a href="pages/all-lots.html"><?=$key['category_name']; ?></a>
                 </li>
             <?php endforeach; ?>
         </ul>
