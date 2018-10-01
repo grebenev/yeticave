@@ -1,12 +1,12 @@
 -- Добавление данных
 
 USE yeticave;
-INSERT INTO categories SET category_name = 'Доски и лыжи';
-INSERT INTO categories SET category_name = 'Крепления';
-INSERT INTO categories SET category_name = 'Ботинки';
-INSERT INTO categories SET category_name = 'Одежда';
-INSERT INTO categories SET category_name = 'Инструменты';
-INSERT INTO categories SET category_name = 'Разное';
+INSERT INTO categories SET category_name = 'Доски и лыжи', class_name = 'boards';
+INSERT INTO categories SET category_name = 'Крепления', class_name = 'attachment';
+INSERT INTO categories SET category_name = 'Ботинки', class_name = 'boots';
+INSERT INTO categories SET category_name = 'Одежда', class_name = 'clothing';
+INSERT INTO categories SET category_name = 'Инструменты', class_name = 'tools';
+INSERT INTO categories SET category_name = 'Разное', class_name = 'other';
 
 INSERT INTO lots SET creation_date = '2018-09-24 21:10:01',
 lot_name = '2014 Rossignol District Snowboard',
@@ -107,10 +107,10 @@ SELECT * FROM categories;
 /*  получить самые новые, открытые лоты. Каждый лот должен включать название,
  стартовую цену, ссылку на изображение, цену, количество ставок, название категории */
 
-SELECT lot_name, description, start_price,  COUNT(bets.id) AS count_bets, category_name, image FROM lots
+SELECT lots.id, lots.lot_name, lots.description, lots.start_price, categories.category_name, lots.image, COUNT(bets.id) AS count_bets FROM lots
 JOIN bets ON bets.lots_id = lots.id
 JOIN categories ON lots.categories_id = categories.id
-GROUP BY lots.id ORDER BY creation_date DESC
+GROUP BY lots.id ORDER BY creation_date DESC;
 
 
 --  показать лот по его id. Получите также название категории, к которой принадлежит лот
