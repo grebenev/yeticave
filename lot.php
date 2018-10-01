@@ -1,33 +1,31 @@
 <?php
-$lot_show = $_GET['lot']  ??  'error';
+$lot_show = $_GET['lot'];
 
-require_once('functions.php');
+//$lot_show = $_GET['lot']  ??  'error'
+
 require_once('db.php');
+require_once('functions.php');
 
+// Запросы
+$lot_data_sql = 'SELECT lots.id, creation_date, lot_name, description, image, start_price, end_date, lot_step, category_name FROM lots 
+ JOIN categories ON categories.id = lots.categories_id WHERE lots.id = '.$lot_show.'';
 
-if (!$link) {
+$bet_sql = 'SELECT bets.id, bet_date, amount, user_name FROM bets 
+ JOIN users ON users.id = bets.users_id WHERE bets.id = '.$lot_show.'';
 
-    $content = include_template('error.php', ['error' => mysqli_connect_error()]);
+//вызовы функции
+$categories_list = get_data_db ($link, $categories_sql, 'list');
+$current_user = get_data_db ($link, $user_sql, 'list');
+$lot_data = get_data_db ($link, $lot_data_sql, 'item');
+$bet_list = get_data_db ($link, $bet_sql, 'list');
 
-} else {
-    // Создание запрос на получение лота
-    $sql = 'SELECT id, creation_date, lot_name, description, image, start_price, end_date, lot_step FROM lots WHERE lots.id = '.$lot_show.'';
-
-    //Выполнение запроса присвоение результата переменной
-    $result = mysqli_query($link, $sql);
-
-    // Если запрос выполнен успешно
-    if ($result) {
-
-        $lot_data = mysqli_fetch_assoc($result);
-    } else {
-        // Нет - получаем текст ошибки
-        $content = include_template('error.php', ['error' => mysqli_error($link)]);
-    }
+if (!isset($lot_data)) {
+//    http_response_code(404);
+    $content = include_template('error.php', ['error' => 'Ошибка 404. Запрашиваемый документ не найден!']);
+}else{
+    $content = include_template('lot.php', compact('lot_data','categories_list', 'bet_list'));
 }
 
-$content = include_template('lot.php', compact('lot_data'));
 
 $layout_content = include_template('layout.php', compact('content', 'is_auth', 'current_user', 'categories_list', 'title'));
-
 print($layout_content);

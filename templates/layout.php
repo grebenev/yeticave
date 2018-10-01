@@ -23,12 +23,13 @@
 
             <nav class="user-menu">
 
-                <?php if ($current_user['id']): ?>
+                <?php foreach ($current_user as $key):
+                    if ($key['id']): ?>
                     <div class="user-menu__image">
-                        <img src="img/<?=$current_user['avatar']; ?>" width="40" height="40" alt="<?=htmlspecialchars($current_user['user_name']); ?>">
+                        <img src="img/<?=$key['avatar']; ?>" width="40" height="40" alt="<?=htmlspecialchars($key['user_name']); ?>">
                     </div>
                     <div class="user-menu__logged">
-                        <p><?=htmlspecialchars($current_user['user_name']); ?></p>
+                        <p><?=htmlspecialchars($key['user_name']); ?></p>
                     </div>
                 <?php else: ?>
                     <ul class="user-menu__list">
@@ -39,7 +40,7 @@
                             <a href="#">Вход</a>
                         </li>
                     </ul>
-                <?php endif; ?>
+                <?php endif; endforeach;?>
 
             </nav>
         </div>
