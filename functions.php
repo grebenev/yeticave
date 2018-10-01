@@ -37,3 +37,16 @@ function time_to_end ($lot_time_create, $lot_time_end) {
 
     return $hours .' часов ' . $minutes . ' минут ';
 }
+
+function get_categories ($link) {
+
+    if($link) {
+        $sql = "SELECT id, category_name, class_name FROM categories";
+    }
+
+    $result = mysqli_query($link, $sql);
+    if ($result) {
+     return  $categories_list = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    }
+
+}
