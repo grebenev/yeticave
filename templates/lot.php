@@ -1,4 +1,3 @@
-  <main>
     <nav class="nav">
       <ul class="nav__list container">
         <?php foreach ($categories_list as $key): ?>
@@ -64,4 +63,3 @@
         </div>
       </div>
     </section>
-  </main>
