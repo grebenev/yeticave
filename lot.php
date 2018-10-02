@@ -27,7 +27,7 @@ if (!isset($lot_data)) {
     $content = include_template('lot.php', compact('lot_aside_content', 'lot_data', 'categories_list'));
 
 }
-
+$title = $lot_data['lot_name'];
 
 $layout_content = include_template('layout.php', compact('content', 'is_auth', 'current_user', 'categories_list', 'title'));
 print($layout_content);
