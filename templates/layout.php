@@ -45,8 +45,7 @@
             </nav>
         </div>
     </header>
-
-    <main class="container"><?=$content; ?></main>
+    <main class="<?php echo ($_SERVER['REQUEST_URI'] == '/') ? 'container' : '' ?>"><?=$content; ?></main>
 </div>
 
 <footer class="main-footer">
