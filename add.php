@@ -18,14 +18,23 @@
   нем ключ с именем tmp_name - в двумерном файловом массиве $_FILES и  переноит его в uploads/ переименовывает в
  $filename*/
 
-        $sql = 'INSERT INTO lots (creation_date, category_id, lot_name, description, image, start_price, lot_step, users_id) 
+        $sql = 'INSERT INTO lots (creation_date, categories_id, lot_name, description, image, start_price, lot_step, users_id) 
 VALUES (NOW(), ?, ?, ?, ?, ?, ?, 1)';
 
         // функция-помощник
 
         $stmt = db_get_prepare_stmt($link, $sql, [$array_lot['category'], $array_lot['name'], $array_lot['message'],
              $array_lot['path'], $array_lot['price'], $array_lot['step']]);
-        $res = mysqli_stmt_execute($stmt);
+        $res = mysqli_stmt_execute($stmt); // выполняем подготовленное выражение
+//
+        if ($res) {
+            $lot_id = mysqli_insert_id($link); //присваивает последний, добавленный id
+
+            header("Location: lot.php?lot=" . $lot_id); //пренаправляет на последний id
+        }
+        else {
+            $content = include_template('error.php', ['error' => mysqli_error($link)]);
+        }
 
     }
 
