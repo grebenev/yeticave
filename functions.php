@@ -30,16 +30,22 @@ function time_to_end ($lot_time_create, $lot_time_end) {// текущий timest
     $minutes = floor(($secs_to_midnight % 3600) / 60);
     return $hours .' часов ' . $minutes . ' минут ';
 }
-// Запросы
+// запросы
 $categories_sql = 'SELECT id, category_name, class_name FROM categories';
 $user_sql = 'SELECT id, user_name, avatar FROM users WHERE id = 1';
 $lots_list_sql = 'SELECT lots.id, creation_date, end_date, lot_name, image, start_price, category_name FROM lots JOIN categories ON categories.id = lots.categories_id ORDER BY creation_date DESC';
 
-// Функция получения данных из базы
+// функция вывода ошибок
+    function show_error(&$content, $error) {
+        $content = include_template('error.php', ['error' => $error]);
+    }
+
+// функция получения данных из базы
 function get_data_db ($link, $sql, $flag) {
 
     if(!$link) {
-    return  $content = include_template('error.php', ['error' => mysqli_connect_error()]);
+        $error = mysqli_connect_error();
+        show_error($content, $error);
     } else {
         $result = mysqli_query($link, $sql);
 
@@ -52,7 +58,55 @@ function get_data_db ($link, $sql, $flag) {
             }
 
         } else {
-            return $content = include_template('error.php', ['error' => mysqli_error($link)]);
+            $error = mysqli_error($link);
+            show_error($content, $error);
         }
     }
 }
+// функция определения типа данных
+    function db_get_prepare_stmt($link, $sql, $data = []) {
+        $stmt = mysqli_prepare($link, $sql);
+
+        if ($data) {
+            $types = '';
+            $stmt_data = [];
+
+            foreach ($data as $value) {
+                $type = null;
+
+                if (is_int($value)) {
+                    $type = 'i';
+                }
+                else if (is_string($value)) {
+                    $type = 's';
+                }
+                else if (is_double($value)) {
+                    $type = 'd';
+                }
+
+                if ($type) {
+                    $types .= $type;
+                    $stmt_data[] = $value;
+                }
+            }
+
+            $values = array_merge([$stmt, $types], $stmt_data);
+
+            $func = 'mysqli_stmt_bind_param';
+            $func(...$values);
+        }
+
+        return $stmt;
+    }
+
+
+// функция отправки
+function set_data_db ($link, $sql) {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+    }
+}
+
+
+
+
