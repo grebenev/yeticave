@@ -2,6 +2,8 @@
     require_once('db.php');
     require_once('functions.php');
 
+    $title ='Добавление лота';
+
 //вызовы функции
     $categories_list = get_data_db($link, $categories_sql, 'list');
     $current_user = get_data_db($link, $user_sql, 'list');
@@ -19,7 +21,7 @@
 
 
         foreach ($required as $key) {
-            if (empty($_POST['lot'][$key])) {
+            if (empty($lot[$key])) {
                 $errors[$key] = 'Это поле надо заполнить';
             }
         }
