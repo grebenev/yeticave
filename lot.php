@@ -1,7 +1,5 @@
 <?php
-    $lot_show = $_GET['lot'];
-
-//$lot_show = $_GET['lot']  ??  'error'
+    $lot_show = intval($_GET['lot']);
 
     require_once('db.php');
     require_once('functions.php');
