@@ -55,11 +55,11 @@
 
             // Если не ошибок добавляем в базу
 
-            $sql = 'INSERT INTO lots (creation_date, categories_id, lot_name, description, image, start_price, lot_step, users_id)
-            VALUES (NOW(), ?, ?, ?, ?, ?, ?, 1)';
+            $sql = 'INSERT INTO lots (creation_date, categories_id, lot_name, description, image, start_price, lot_step, users_id, end_date)
+            VALUES (NOW(), ?, ?, ?, ?, ?, ?, 1, ?)';
 
             $stmt = db_get_prepare_stmt($link, $sql, [$lot['category'], $lot['name'], $lot['message'],
-                $lot['path'], $lot['price'], $lot['step']]);
+                $lot['path'], $lot['price'], $lot['step'], $lot['date']]);
             $res = mysqli_stmt_execute($stmt); // выполняем подготовленное выражение
 
             if ($res) {
