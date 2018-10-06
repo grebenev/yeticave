@@ -3,7 +3,7 @@
     require_once('db.php');
     require_once('functions.php');
 
-    $title = 'Ренистрация';
+    $title = 'Регистрация';
 
     //вызовы функции
     $categories_list = get_data_db($link, $categories_sql, 'list');
@@ -12,7 +12,7 @@
     $content = include_template('reg.php', compact('categories_list'));
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        $dict = ['email' => 'Почта', 'password' => 'Пароль', 'name' => 'Имя', 'contacts' => 'Контакт', 'file' => 'Изображение'];
+        $dict = ['email' => 'Почта', 'password' => 'Пароль', 'name' => 'Имя', 'contacts' => 'Контакт', 'no_file' => 'Изображение'];
 
 
 

@@ -119,6 +119,32 @@
 
     }
 
+
+    function check_file($file_name) {
+
+        if (!empty($_FILES[$file_name]['name'])) {
+            $tmp_name = $_FILES[$file_name]['tmp_name'];
+
+            $finfo = finfo_open(FILEINFO_MIME_TYPE);
+            $file_type = finfo_file($finfo, $tmp_name);
+
+
+            if ($file_type !== "image/jpeg") {
+                $err['no_file'] = 'Загрузите картинку в формате JPEG';
+                return $err;
+
+            } else {
+                $filename = uniqid() . '.jpg';
+                move_uploaded_file($tmp_name, 'img/' . $filename);
+                return $filename;
+            }
+
+        } else {
+            $err['no_file'] = 'Нет файла';
+            return $err;
+        }
+    }
+
 // функция валидации
     function validate_register($data, $link) {
         $required = ['email', 'password', 'name', 'contacts'];
@@ -143,21 +169,31 @@
             }
         }
 
-        if (!empty($_FILES['jpg_image']['name'])) {
-            $tmp_name = $_FILES['jpg_image']['tmp_name'];
+//        if (!empty($_FILES['jpg_image']['name'])) {
+//            $tmp_name = $_FILES['jpg_image']['tmp_name'];
+//
+//            $finfo = finfo_open(FILEINFO_MIME_TYPE);
+//            $file_type = finfo_file($finfo, $tmp_name);
+//
+//
+//            if ($file_type !== "image/jpeg") {
+//                $errors['file'] = 'Загрузите картинку в формате JPEG';
+//
+//            } else {
+//                $filename = uniqid() . '.jpg';
+//                move_uploaded_file($tmp_name, 'img/' . $filename);
+//                $data['path'] = $filename;
+//            }
+//        }
+//        if (check_file('jpg_image')) {
+//
+//        }
+        $result = check_file('jpg_image');
 
-            $finfo = finfo_open(FILEINFO_MIME_TYPE);
-            $file_type = finfo_file($finfo, $tmp_name);
+        var_dump($result);
 
-
-            if ($file_type !== "image/jpeg") {
-                $errors['file'] = 'Загрузите картинку в формате JPEG';
-
-            } else {
-                $filename = uniqid() . '.jpg';
-                move_uploaded_file($tmp_name, 'img/' . $filename);
-                $data['path'] = $filename;
-            }
+        if(is_array($result)) {
+            $errors = $result;
         }
 
         if (empty($errors)) {
@@ -176,7 +212,7 @@
             $password = password_hash($data['password'], PASSWORD_DEFAULT);
             $sql = 'INSERT INTO users (registration_date, email, user_name, password, avatar, contacts)
             VALUES (NOW(), ?, ?, ?, ?, ?)';
-            $stmt = db_get_prepare_stmt($link, $sql, [$data['email'], $data['name'], $password,$data['path'], $data['contacts']]);
+            $stmt = db_get_prepare_stmt($link, $sql, [$data['email'], $data['name'], $password, $data['path'], $data['contacts']]);
             $res = mysqli_stmt_execute($stmt);
 
 
