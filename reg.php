@@ -12,37 +12,28 @@
     $content = include_template('reg.php', compact('categories_list'));
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        $reg = $_POST['reg'];
-        $required = ['email', 'password', 'name', 'contacts', 'file'];
         $dict = ['email' => 'Почта', 'password' => 'Пароль', 'name' => 'Имя', 'contacts' => 'Контакт', 'file' => 'Изображение'];
-        $errors = [];
 
-        foreach ($required as $key) {
-            if (empty($reg[$key])) {
-                $errors[$key] = 'Это поле надо заполнить';
-            }
+
+
+
+        $is_register = register($_POST['reg'], $link);
+
+        if ($is_register === true) {
+            // редирект
+        } else if (count($is_register) > 0) {
+            // показывай ошибки которые лежат в $isRegister
+            $content = include_template('reg.php', compact('categories_list', 'reg', 'is_register', 'dict'));
         }
 
-        if(!empty($reg['email'])) {
-            $email = mysqli_real_escape_string($link, $reg['email']);
-            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                $errors['email'] = 'Email должен быть корректным';
+//
+//        if (count($is_register) > 0) {
+//            $content = include_template('reg.php', compact('categories_list', 'reg', 'is_register', 'dict'));
+//        }
 
-            } else {
-                $sql = "SELECT id FROM users WHERE email = '$email'";
-                $res = mysqli_query($link, $sql);
-                if (mysqli_num_rows($res) > 0) {
-                    $errors['email'] = 'Пользователь с этим email уже зарегистрирован';
-                }
-            }
-        }
-
-
-
-        if (count($errors) > 0) {
-            $content = include_template('reg.php', compact('categories_list', 'reg', 'errors', 'dict'));
-        }
     }
+
+
 
 
 

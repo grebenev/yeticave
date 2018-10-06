@@ -119,6 +119,67 @@
 
     }
 
+// функция валидации
+    function validate_register($data, $link) {
+        $required = ['email', 'password', 'name', 'contacts'];
+        $errors = [];
+
+        foreach ($required as $key) {
+            if (empty($data[$key])) {
+                $errors[$key] = 'Это поле надо заполнить';
+            }
+        }
+        if(!empty($data['email'])) {
+            $email = mysqli_real_escape_string($link, $data['email']);
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $errors['email'] = 'Email должен быть корректным';
+
+            } else {
+                $sql = "SELECT id FROM users WHERE email = '$email'";
+                $res = mysqli_query($link, $sql);
+                if (mysqli_num_rows($res) > 0) {
+                    $errors['email'] = 'Пользователь с этим email уже зарегистрирован';
+                }
+            }
+        }
+
+        if (!empty($_FILES['jpg_image']['name'])) {
+            $tmp_name = $_FILES['jpg_image']['tmp_name'];
+
+            $finfo = finfo_open(FILEINFO_MIME_TYPE);
+            $file_type = finfo_file($finfo, $tmp_name);
+
+
+            if ($file_type !== "image/jpeg") {
+                $errors['file'] = 'Загрузите картинку в формате JPEG';
+
+            } else {
+                $filename = uniqid() . '.jpg';
+                move_uploaded_file($tmp_name, 'img/' . $filename);
+                $data['path'] = $filename;
+            }
+        }
+
+        if (empty($errors)) {
+            return true;
+        } else {
+            return $errors;
+        }
+    }
+    // функция регистрации
+    function register($data, $link) {
+
+        $validate = validate_register($data, $link);
+
+        if ($validate === true) {
+            // Регистрируй
+            return true;
+        } else {
+            return $validate;
+        }
+    }
+
+
 
 
 
