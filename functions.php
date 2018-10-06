@@ -173,7 +173,13 @@
 
         if ($validate === true) {
             // Регистрируй
-            return true;
+            $password = password_hash($data['password'], PASSWORD_DEFAULT);
+            $sql = 'INSERT INTO users (registration_date, email, user_name, password, avatar, contacts)
+            VALUES (NOW(), ?, ?, ?, ?, ?)';
+            $stmt = db_get_prepare_stmt($link, $sql, [$data['email'], $data['name'], $password,$data['path'], $data['contacts']]);
+            $res = mysqli_stmt_execute($stmt);
+
+
         } else {
             return $validate;
         }
