@@ -5,5 +5,7 @@
 *.pdf
 *.psd
 *.sublime*
+*.jpeg
+*.jpg
 Thumbs.db
 vendor
