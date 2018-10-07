@@ -9,10 +9,11 @@
     $categories_list = get_data_db($link, $categories_sql, 'list');
     $current_user = get_data_db($link, $user_sql, 'list');
 
-    $content = include_template('reg.php', compact('categories_list'));
+    $content = include_template('reg.php', compact('categories_list', 'reg'));
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        $dict = ['email' => 'Почта', 'password' => 'Пароль', 'name' => 'Имя', 'contacts' => 'Контакт', 'no_file' => 'Изображение'];
+        $reg = $_POST['reg'];
+        $dict = ['email' => 'Почта', 'password' => 'Пароль', 'name' => 'Имя', 'contacts' => 'Контакт', 'file' => 'Изображение'];
 
 
 
@@ -21,16 +22,11 @@
 
         if ($is_register === true) {
             // редирект
+            header("Location: /enter.php");
+
         } else if (count($is_register) > 0) {
-            // показывай ошибки которые лежат в $isRegister
             $content = include_template('reg.php', compact('categories_list', 'reg', 'is_register', 'dict'));
         }
-
-//
-//        if (count($is_register) > 0) {
-//            $content = include_template('reg.php', compact('categories_list', 'reg', 'is_register', 'dict'));
-//        }
-
     }
 
 
