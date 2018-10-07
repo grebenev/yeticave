@@ -1,5 +1,5 @@
 <?php
-
+    session_start ();
     require_once ('db.php');
     require_once ('functions.php');
 
@@ -7,7 +7,7 @@
 
     //вызовы функции
     $categories_list = get_data_db ($link, $categories_sql, 'list');
-    $current_user = get_data_db ($link, $user_sql, 'list');
+//    $current_user = get_data_db ($link, $user_sql, 'list');
 
     $content = include_template ('reg.php', compact ('categories_list', 'reg'));
 
@@ -27,5 +27,5 @@
         }
     }
 
-    $layout_content = include_template ('layout.php', compact ('content', 'is_auth', 'current_user', 'categories_list', 'title'));
+    $layout_content = include_template ('layout.php', compact ('content', 'categories_list', 'title'));
     print($layout_content);

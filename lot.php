@@ -1,4 +1,5 @@
 <?php
+    session_start ();
     $lot_show = intval($_GET['lot']);
 
     require_once('db.php');
@@ -13,7 +14,7 @@
 
 //вызовы функции
     $categories_list = get_data_db($link, $categories_sql, 'list');
-    $current_user = get_data_db($link, $user_sql, 'list');
+//    $current_user = get_data_db($link, $user_sql, 'list');
     $lot_data = get_data_db($link, $lot_data_sql, 'item');
     $bet_list = get_data_db($link, $bet_sql, 'list');
 
@@ -28,5 +29,5 @@
 
     $title = $lot_data['lot_name'];
 
-    $layout_content = include_template('layout.php', compact('content', 'is_auth', 'current_user', 'categories_list', 'title'));
+    $layout_content = include_template('layout.php', compact('content', 'categories_list', 'title'));
     print($layout_content);

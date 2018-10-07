@@ -1,46 +1,62 @@
 <?php
 
-require_once('db.php');
-require_once('functions.php');
+    session_start ();
+    require_once ('db.php');
+    require_once ('functions.php');
 
-$title = 'Вход';
+    $title = 'Вход';
 
-$categories_list = get_data_db($link, $categories_sql, 'list');
-$current_user = get_data_db($link, $user_sql, 'list');
+    $categories_list = get_data_db ($link, $categories_sql, 'list');
+//$current_user = get_data_db($link, $user_sql, 'list');
 
-$content = include_template('login.php', compact('categories_list'));
+    $content = include_template ('login.php', compact ('categories_list'));
 
-session_start();
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $login= $_POST;
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        $login = $_POST['login'];
 
-    $required = ['email', 'password'];
-    $errors = [];
-    foreach ($required as $key) {
-        if (empty($form[$key])) {
-            $errors[$key] = 'Это поле надо заполнить';
+        $required = ['email', 'password'];
+        $dict = ['email' => 'Почта', 'password' => 'Пароль'];
+        $errors = [];
+        foreach ($required as $key) {
+            if (empty($login[$key])) {
+                $errors[$key] = 'Это поле надо заполнить';
+            }
         }
-    }
 
-    $email = mysqli_real_escape_string($link, $login['email']);
-    $sql = "SELECT * FROM users WHERE email = '$email'";
-    $res = mysqli_query($link, $sql);
+        $email = mysqli_real_escape_string ($link, $login['email']);
+        $sql = "SELECT * FROM users WHERE email = '$email'";
+        $res = mysqli_query ($link, $sql);
 
-    $user = $res ? mysqli_fetch_array($res, MYSQLI_ASSOC) : null;
+        $user = $res ? mysqli_fetch_array ($res, MYSQLI_ASSOC) : null;
 
-    if (!count($errors) and $user) {
-        if (password_verify($login['password'], $user['password'])) {
-            $_SESSION['user'] = $user;
+        if (!count ($errors) and $user) {
+            if (password_verify ($login['password'], $user['password'])) {
+                $_SESSION['user'] = $user;
+            } else {
+                $errors['password'] = 'Неверный пароль';
+            }
         } else {
-            $errors['password'] = 'Неверный пароль';
+            $errors['email'] = 'Такой пользователь не найден';
+        }
+
+        if (count ($errors) > 0) {
+            $content = include_template ('login.php', compact ('categories_list', 'login', 'errors', 'dict'));
+        }else {
+            header("Location: /login.php");
+
+            exit();
+        }
+
+    } else {
+        if (isset($_SESSION['user'])) {
+            $username = $_SESSION['user']['user_name'];
+            $content = include_template ('welcome.php', compact('username', 'categories_list'));
+
+        } else {
+            $content = include_template ('login.php', compact ('categories_list'));
         }
     }
 
-    if (count($errors) > 0) {
-        $content = include_template('login.php', compact('categories_list', 'login', 'errors', 'dict'));
-    }
-}
-
-$layout_content = include_template('layout.php', compact('content', 'is_auth', 'current_user', 'categories_list', 'title'));
-print($layout_content);
+    $layout_content = include_template ('layout.php', compact ('content', 'categories_list', 'title'));
+    print($layout_content);
