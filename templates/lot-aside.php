@@ -1,4 +1,3 @@
-<div class="lot-item__right">
     <div class="lot-item__state">
         <div class="lot-item__timer timer">
             10:54:12
@@ -32,4 +31,4 @@
             <?php endforeach; ?>
         </table>
     </div>
-</div>
+

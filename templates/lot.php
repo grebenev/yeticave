@@ -9,6 +9,10 @@
             <p class="lot-item__category">Категория: <span><?= $lot_data['category_name']; ?></span></p>
             <p class="lot-item__description"><?= htmlspecialchars($lot_data['description']); ?></p>
         </div>
-<!--        --><?//= $lot_aside_content; ?>
+        <div class="lot-item__right">
+            <?php if (isset($_SESSION['user'])):?>
+              <?= $lot_aside_content; ?>
+            <?php endif;?>
+        </div>
     </div>
 </section>

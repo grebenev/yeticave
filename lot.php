@@ -1,6 +1,18 @@
 <?php
+
     session_start ();
     $lot_show = intval($_GET['lot']);
+
+    $cookie_name = "save_id";
+    $url_id = $lot_show;
+    $expire = strtotime("+3 minutes");
+    $path = "/";
+
+    if (isset($_COOKIE['save_id'])) {
+        $url_id = $lot_show;
+     }
+
+    setcookie($cookie_name, $url_id, $expire, $path);
 
     require_once('db.php');
     require_once('functions.php');
