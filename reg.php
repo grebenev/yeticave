@@ -7,7 +7,6 @@
 
     //вызовы функции
     $categories_list = get_data_db($link, $categories_sql, 'list');
-//    $current_user = get_data_db ($link, $user_sql, 'list');
 
     $content = include_template('reg.php', compact('categories_list', 'reg'));
 
