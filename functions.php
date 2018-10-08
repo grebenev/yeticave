@@ -32,8 +32,13 @@
     }
 
 // запросы
+    if (isset($_SESSION['user'])) {
+        $user_id = $_SESSION['user']['id'];
+    }
+
+
     $categories_sql = 'SELECT id, category_name, class_name FROM categories';
-    $user_sql = 'SELECT id, user_name, avatar FROM users WHERE id = 1';
+//    $user_sql = 'SELECT id, user_name, avatar FROM users WHERE id = '. $user_id.'';
     $lots_list_sql = 'SELECT lots.id, creation_date, end_date, lot_name, image, start_price, category_name FROM lots JOIN categories ON categories.id = lots.categories_id ORDER BY creation_date DESC';
 
 // функция вывода ошибок
@@ -110,7 +115,6 @@
         return $stmt;
 
     }
-
 
 // функция валидации
     function validate_register ($data, $link) {
