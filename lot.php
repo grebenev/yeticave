@@ -1,6 +1,6 @@
 <?php
 
-    session_start ();
+    session_start();
     $lot_show = intval($_GET['lot']);
 
     $cookie_name = "save_id";
@@ -10,7 +10,7 @@
 
     if (isset($_COOKIE['save_id'])) {
         $url_id = $lot_show;
-     }
+    }
 
     setcookie($cookie_name, $url_id, $expire, $path);
 

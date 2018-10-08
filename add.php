@@ -42,7 +42,7 @@
             $file_type = finfo_file ($finfo, $tmp_name);
 
 
-            if ($file_type !== "image/jpeg") {
+            if ($file_type !== "image/jpeg  ") {
                 $errors['file'] = 'Загрузите картинку в формате JPEG';
 
             } else {
