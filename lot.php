@@ -1,6 +1,5 @@
 <?php
-
-    session_start ();
+    session_start();
     $lot_show = intval($_GET['lot']);
 
     $cookie_name = "save_id";
@@ -10,23 +9,22 @@
 
     if (isset($_COOKIE['save_id'])) {
         $url_id = $lot_show;
-     }
+    }
 
     setcookie($cookie_name, $url_id, $expire, $path);
 
     require_once('db.php');
     require_once('functions.php');
 
-// Запросы
+    // Запросы
     $lot_data_sql = 'SELECT lots.id, creation_date, lot_name, description, image, start_price, end_date, lot_step, category_name FROM lots 
     JOIN categories ON categories.id = lots.categories_id WHERE lots.id = ' . $lot_show;
 
     $bet_sql = 'SELECT bets.id, bet_date, amount, user_name FROM bets 
     JOIN users ON users.id = bets.users_id WHERE bets.id = ' . $lot_show;
 
-//вызовы функции
+    //вызовы функции
     $categories_list = get_data_db($link, $categories_sql, 'list');
-//    $current_user = get_data_db($link, $user_sql, 'list');
     $lot_data = get_data_db($link, $lot_data_sql, 'item');
     $bet_list = get_data_db($link, $bet_sql, 'list');
 
