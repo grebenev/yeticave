@@ -54,14 +54,6 @@
         }
     }
 
-    // функция проверки числа
-    function check_number($num) {
-        if (!filter_var($num, FILTER_VALIDATE_INT)) {
-            $errors = 'число должно быть корректным';
-            return $errors;
-        }
-    }
-
     // функция получения данных из базы
     function get_data_db($link, $sql, $flag) {
 
