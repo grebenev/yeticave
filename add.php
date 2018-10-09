@@ -24,12 +24,23 @@
         $dict = ['name' => 'Наименование', 'message' => 'Описание', 'category' => 'Категория', 'price' => 'Начальная цена', 'step' => 'Шаг ставки', 'date' => 'Дата окончания торгов', 'file' => 'Изображение'];
         $errors = [];
 
+        // проверка числа
+        $err_price = check_number($lot['price']);
+        $err_step = check_number($lot['step']);
+        if($err_price) {
+            $errors['price'] = $err_price;
+        }
+        if($err_step) {
+            $errors['step'] = $err_price;
+        }
+
 
         foreach ($required as $key) {
             if (empty($lot[$key])) {
                 $errors[$key] = 'Это поле надо заполнить';
             }
         }
+
 
         // проверка файла
         if (!empty($_FILES['jpg_image']['name'])) {
