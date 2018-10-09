@@ -1,5 +1,5 @@
 <?php
-
+    // функция шаблонизации
     function include_template($name, $data) {
         $name = 'templates/' . $name;
         $result = '';
@@ -13,7 +13,7 @@
         return $result;
     }
 
-
+    // функция форматирования цены
     function transform_format($number) {
         $integer = ceil($number);
         if ($integer > 1000) {
@@ -22,6 +22,7 @@
         return $integer .= ' ₽';
     }
 
+    // функция времени существования лота
     function time_to_end($lot_time_create, $lot_time_end) {// текущий timestamp
         $secs_to_midnight = strtotime($lot_time_end) - strtotime($lot_time_create);
         // округление часов деленое на кол-во секунд в часе.
@@ -30,16 +31,13 @@
         $minutes = floor(($secs_to_midnight % 3600) / 60);
         return $hours . ' часов ' . $minutes . ' минут ';
     }
-
-
     $categories_sql = 'SELECT id, category_name, class_name FROM categories';
-
-//    $lots_list_sql = 'SELECT lots.id, creation_date, end_date, lot_name, image, start_price, category_name FROM lots JOIN categories ON categories.id = lots.categories_id ORDER BY creation_date DESC';
 
     // функция вывода ошибок
     function show_error(&$content, $error) {
         $content = include_template('error.php', ['error' => $error]);
     }
+
     // функция подключения к базе
     function get_link_db($link, $sql) {
         if(!$link) {
@@ -55,6 +53,15 @@
             }
         }
     }
+
+    // функция проверки числа
+    function check_number($num) {
+        if (!filter_var($num, FILTER_VALIDATE_INT)) {
+            $errors = 'число должно быть корректным';
+            return $errors;
+        }
+    }
+
     // функция получения данных из базы
     function get_data_db($link, $sql, $flag) {
 
@@ -63,31 +70,11 @@
         if($link_result) {
             if ($flag == 'list') {
                     return $list = mysqli_fetch_all($link_result, MYSQLI_ASSOC);
-                }
+            }
                 if ($flag == 'item') {
                     return $list = mysqli_fetch_assoc($link_result);
                 }
         }
-
-//        if (!$link) {
-//            $error = mysqli_connect_error();
-//            show_error($content, $error);
-//        } else {
-//            $result = mysqli_query($link, $sql);
-//
-//            if ($result) {
-//                if ($flag == 'list') {
-//                    return $list = mysqli_fetch_all($result, MYSQLI_ASSOC);
-//                }
-//                if ($flag == 'item') {
-//                    return $list = mysqli_fetch_assoc($result);
-//                }
-//
-//            } else {
-//                $error = mysqli_error($link);
-//                show_error($content, $error);
-//            }
-//        }
     }
 
     /**
