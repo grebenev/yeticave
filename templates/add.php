@@ -52,14 +52,14 @@
             $value = isset($lot['price']) ? $lot['price'] : ""; ?>
         <div class="form__item form__item--small <?=$class_name;?>">
             <label for="lot-rate">Начальная цена</label>
-            <input id="lot-rate" type="number" name="lot[price]" placeholder="0" value="<?=$value;?>">
+            <input id="lot-rate" type="text" name="lot[price]" placeholder="0" value="<?=$value;?>">
             <span class="form__error">Введите начальную цену</span>
         </div>
         <?php $class_name = isset($errors['step']) ? "form__item--invalid" :"";
             $value = isset($lot['step']) ? $lot['step'] : ""; ?>
         <div class="form__item form__item--small <?=$class_name;?>">
             <label for="lot-step">Шаг ставки</label>
-            <input id="lot-step" type="number" name="lot[step]" placeholder="0" value="<?=$value;?>">
+            <input id="lot-step" type="text" name="lot[step]" placeholder="0" value="<?=$value;?>">
             <span class="form__error">Введите шаг ставки</span>
         </div>
         <?php $class_name = isset($errors['date']) ? "form__item--invalid" :"";
