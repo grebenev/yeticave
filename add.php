@@ -49,8 +49,8 @@
             $file_type = finfo_file($finfo, $tmp_name);
 
 
-            if ($file_type !== "image/jpeg  ") {
-                $errors['file'] = 'Загрузите картинку в формате JPEG';
+            if (!in_array($file_type, ['image/jpeg', 'image/png'])) {
+                $errors['file'] = 'Загрузите картинку в формате JPEG или PNG';
 
             } else {
                 $filename = uniqid() . '.jpg';
