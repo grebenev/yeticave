@@ -39,12 +39,5 @@ JOIN categories ON categories.id = lots.categories_id WHERE MATCH (lot_name, des
         }
     }
 
-
-    // создаем запрос
-
-//    $search_sql = "SELECT lots.id, creation_date, end_date, lot_name, image, start_price, category_name FROM lots
-//JOIN categories ON categories.id = lots.categories_id WHERE lots.lot_name LIKE '%$save_search%' or description LIKE '%$save_search%'";
-
-
     $layout_content = include_template('layout.php', compact('content', 'categories_list', 'title'));
     print($layout_content);
