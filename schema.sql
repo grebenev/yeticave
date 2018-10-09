@@ -15,6 +15,7 @@ CREATE TABLE lots (
   creation_date DATETIME,
   lot_name CHAR(128),
   description TEXT,
+  FULLTEXT (lot_name, description),
   image CHAR(128),
   start_price INT(16),
   end_date DATE,

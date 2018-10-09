@@ -7,6 +7,8 @@
     require_once('db.php');
     require_once('functions.php');
 
+    $lots_list_sql = 'SELECT lots.id, creation_date, end_date, lot_name, image, start_price, category_name FROM lots JOIN categories ON categories.id = lots.categories_id ORDER BY creation_date DESC';
+
 
     $categories_list = get_data_db($link, $categories_sql, 'list');
 

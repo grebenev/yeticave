@@ -31,43 +31,63 @@
         return $hours . ' часов ' . $minutes . ' минут ';
     }
 
-    // запросы
-    if (isset($_SESSION['user'])) {
-        $user_id = $_SESSION['user']['id'];
-    }
-
 
     $categories_sql = 'SELECT id, category_name, class_name FROM categories';
 
-    $lots_list_sql = 'SELECT lots.id, creation_date, end_date, lot_name, image, start_price, category_name FROM lots JOIN categories ON categories.id = lots.categories_id ORDER BY creation_date DESC';
+//    $lots_list_sql = 'SELECT lots.id, creation_date, end_date, lot_name, image, start_price, category_name FROM lots JOIN categories ON categories.id = lots.categories_id ORDER BY creation_date DESC';
 
     // функция вывода ошибок
     function show_error(&$content, $error) {
         $content = include_template('error.php', ['error' => $error]);
     }
-
-    // функция получения данных из базы
-    function get_data_db($link, $sql, $flag) {
-
-        if (!$link) {
+    // функция подключения к базе
+    function get_link_db($link, $sql) {
+        if(!$link) {
             $error = mysqli_connect_error();
             show_error($content, $error);
         } else {
             $result = mysqli_query($link, $sql);
-
-            if ($result) {
-                if ($flag == 'list') {
-                    return $list = mysqli_fetch_all($result, MYSQLI_ASSOC);
-                }
-                if ($flag == 'item') {
-                    return $list = mysqli_fetch_assoc($result);
-                }
-
-            } else {
+            if(!$result) {
                 $error = mysqli_error($link);
                 show_error($content, $error);
+            } else {
+                return $result;
             }
         }
+    }
+    // функция получения данных из базы
+    function get_data_db($link, $sql, $flag) {
+
+        $link_result = get_link_db($link, $sql);
+
+        if($link_result) {
+            if ($flag == 'list') {
+                    return $list = mysqli_fetch_all($link_result, MYSQLI_ASSOC);
+                }
+                if ($flag == 'item') {
+                    return $list = mysqli_fetch_assoc($link_result);
+                }
+        }
+
+//        if (!$link) {
+//            $error = mysqli_connect_error();
+//            show_error($content, $error);
+//        } else {
+//            $result = mysqli_query($link, $sql);
+//
+//            if ($result) {
+//                if ($flag == 'list') {
+//                    return $list = mysqli_fetch_all($result, MYSQLI_ASSOC);
+//                }
+//                if ($flag == 'item') {
+//                    return $list = mysqli_fetch_assoc($result);
+//                }
+//
+//            } else {
+//                $error = mysqli_error($link);
+//                show_error($content, $error);
+//            }
+//        }
     }
 
     /**
