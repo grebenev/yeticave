@@ -55,7 +55,7 @@
             <!--заполните этот список из массива категорий-->
             <?php foreach ($categories_list as $key): ?>
                 <li class="nav__item">
-                    <a href="all-lots.html"><?=$key['category_name']; ?></a>
+                    <a href="all-lots.php?category=<?=$key['id']; ?>"><?=$key['category_name']; ?></a>
                 </li>
             <?php endforeach; ?>
         </ul>
