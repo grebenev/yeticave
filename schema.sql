@@ -15,7 +15,6 @@ CREATE TABLE lots (
   creation_date DATETIME,
   lot_name CHAR(128),
   description TEXT,
-  FULLTEXT (lot_name, description),
   image CHAR(128),
   start_price INT(16),
   end_date DATE,
@@ -24,7 +23,8 @@ CREATE TABLE lots (
   winners_id INT(8),
   categories_id INT(8)
 );
-CREATE INDEX search_lot ON lots(lot_name);
+
+CREATE FULLTEXT INDEX search_lot ON lots(lot_name, description)
 
 CREATE TABLE bets (
   id INT AUTO_INCREMENT PRIMARY KEY,
