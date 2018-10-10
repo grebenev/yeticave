@@ -4,7 +4,7 @@
         <?php if($error): ?>
             <h2><span><?=$error; ?></span></h2>
         <?php else: ?>
-        <h2>Результаты поиска по запросу «<span><?=$save_search; ?></span>»</h2>
+        <h2>Результаты поиска по запросу «<span><?=$search; ?></span>»</h2>
         <ul class="lots__list">
             <?php foreach ($search_list as $key): ?>
                 <li class="lots__item lot">
