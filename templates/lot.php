@@ -10,7 +10,8 @@
             <p class="lot-item__description"><?= htmlspecialchars($lot_data['description']); ?></p>
         </div>
         <div class="lot-item__right">
-            <?php if (isset($_SESSION['user'])):?>
+            <?php if (isset($_SESSION['user'])):
+                if ($lot_data['users_id']!==$_SESSION['user']['id'] && !$total_count):?>
                 <div class="lot-item__state">
                     <div class="lot-item__timer timer">
                         <?=time_to_end($lot_data['end_date'])?>
@@ -33,14 +34,15 @@
                         <button type="submit" class="button">Сделать ставку</button>
                     </form>
                 </div>
+                    <?php endif; ?>
                 <div class="history">
                     <h3>История ставок (<span>10</span>)</h3>
                     <table class="history__list">
                         <?php foreach ($bet_list as $key): ?>
                             <tr class="history__item">
                                 <td class="history__name"><?= htmlspecialchars($key['user_name']); ?></td>
-                                <td class="history__price"><?= htmlspecialchars($key['amount']); ?></td>
-                                <td class="history__time"><?= htmlspecialchars($key['bet_date']); ?></td>
+                                <td class="history__price"><?= htmlspecialchars(transform_format($key['amount'])); ?></td>
+                                <td class="history__time"><?= time_left($key['bet_date']); ?></td>
                             </tr>
                         <?php endforeach; ?>
                     </table>
