@@ -47,7 +47,7 @@
 
             } else {//если число
 
-                if($cost > $start_price + $step) { //проверяем что больше чем цена + шаг
+                if($cost >= $start_price + $step) { //проверяем что больше чем цена + шаг
 
                     $user_id = $_SESSION['user']['id'];
                     $bet_sql = 'INSERT INTO bets (bet_date, amount, users_id, lots_id) VALUES (NOW(), ?, ' .$user_id.', 
