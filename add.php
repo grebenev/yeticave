@@ -45,9 +45,7 @@
         if (!empty($_FILES['jpg_image']['name'])) {
             $tmp_name = $_FILES['jpg_image']['tmp_name'];
 
-            $finfo = finfo_open(FILEINFO_MIME_TYPE);
-            $file_type = finfo_file($finfo, $tmp_name);
-
+            $file_type = mime_content_type ($tmp_name);
 
             if (!in_array($file_type, ['image/jpeg', 'image/png'])) {
                 $errors['file'] = 'Загрузите картинку в формате JPEG или PNG';
@@ -62,15 +60,20 @@
             $errors['file'] = 'Вы не загрузили файл';
         }
 
+        //проверка даты
+        if(strtotime($lot['date']) < (time() + (60 * 60 * 24))) {
+            $errors['date'] = 'Дата должна быть больше';
+        };
 
         if (count($errors) > 0) {
             $content = include_template('add.php', compact('categories_list', 'lot', 'errors', 'dict'));
         } else {
 
             // Если не ошибок добавляем в базу
+            $user_id = $_SESSION['user']['id'];
 
             $sql = 'INSERT INTO lots (creation_date, categories_id, lot_name, description, image, start_price, lot_step, users_id, end_date)
-            VALUES (NOW(), ?, ?, ?, ?, ?, ?, 1, ?)';
+            VALUES (NOW(), ?, ?, ?, ?, ?, ?, '.$user_id.', ?)';
 
             $stmt = db_get_prepare_stmt($link, $sql, [$lot['category'], $lot['name'], $lot['message'],
                 $lot['path'], $lot['price'], $lot['step'], $lot['date']]);
