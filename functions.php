@@ -1,4 +1,10 @@
 <?php
+    // установка локали
+    date_default_timezone_set("Europe/Moscow");
+
+    //запрос для вывода категорий по всем вложенным страницам
+    $categories_sql = 'SELECT id, category_name, class_name FROM categories';
+
     // функция шаблонизации
     function include_template($name, $data) {
         $name = 'templates/' . $name;
@@ -23,15 +29,16 @@
     }
 
     // функция времени существования лота
-    function time_to_end($lot_time_create, $lot_time_end) {// текущий timestamp
-        $secs_to_midnight = strtotime($lot_time_end) - strtotime($lot_time_create);
-        // округление часов деленое на кол-во секунд в часе.
-        $hours = floor($secs_to_midnight / 3600);
-        // округление минут
-        $minutes = floor(($secs_to_midnight % 3600) / 60);
-        return $hours . ' часов ' . $minutes . ' минут ';
+    function time_to_end($lot_time_end) {// текущий timestamp
+        $time_now = time();
+        $secs_to_end =   strtotime($lot_time_end) - $time_now;
+        // округление часов деленое на кол-во секунд в часе. 3600с - это 1 час
+        $hours = floor($secs_to_end / 3600);
+
+        //округление минут
+        $minutes = floor(($secs_to_end % 3600) / 60);
+        return $hours . ':' . $minutes . '';
     }
-    $categories_sql = 'SELECT id, category_name, class_name FROM categories';
 
     // функция вывода ошибок
     function show_error(&$content, $error) {
