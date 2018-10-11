@@ -191,6 +191,30 @@
     }
 
 
+function time_left($time_in) {
+    $time = strtotime($time_in);
+
+    $month = date('n', $time); // присваиваем месяц от timestamp
+    $day = date('j', $time);
+    $year = date('Y', $time);
+
+    $hour = date('G', $time);
+    $min = date('i', $time);
+    $date = $day. '.'.$month. '.'.$year. '  в '.$hour. ':'.$min;
+    $diff = time() - $time; // от текущего времени отнимает время ставки (в секундах)
+
+    if ($diff < 59) { // если разница меньше 59сек
+        return $diff. " сек. назад"; //то возвращаем разницу с "сек. назад"
+    } elseif($diff / 60 > 1 and $diff / 60 < 59) { // если от 1 до 60 минут
+        return round($diff / 60). " мин. назад"; //то возвращаем разницу
+    } elseif($diff / 3600 > 1 and $diff / 3600 < 23) { // если от 1 до 23 часов
+        return round($diff / 3600). " час. назад";
+    }else{
+        return $date;
+    }
+}
+
+
 
 
 
