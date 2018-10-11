@@ -13,7 +13,7 @@
             <?php if (isset($_SESSION['user'])):?>
                 <div class="lot-item__state">
                     <div class="lot-item__timer timer">
-                        10:54:12
+                        <?=time_to_end($lot_data['end_date'])?>
                     </div>
                     <div class="lot-item__cost-state">
                         <div class="lot-item__rate">
