@@ -31,7 +31,7 @@
     // функция времени существования лота
     function time_to_end($lot_time_end) {// текущий timestamp
         $time_now = time();
-        $secs_to_end =   strtotime($lot_time_end) - $time_now;
+        $secs_to_end = strtotime($lot_time_end) - $time_now;
         // округление часов деленое на кол-во секунд в часе. 3600с - это 1 час
         $hours = floor($secs_to_end / 3600);
 
@@ -47,12 +47,12 @@
 
     // функция подключения к базе
     function get_link_db($link, $sql) {
-        if(!$link) {
+        if (!$link) {
             $error = mysqli_connect_error();
             show_error($content, $error);
         } else {
             $result = mysqli_query($link, $sql);
-            if(!$result) {
+            if (!$result) {
                 $error = mysqli_error($link);
                 show_error($content, $error);
             } else {
@@ -66,13 +66,13 @@
 
         $link_result = get_link_db($link, $sql);
 
-        if($link_result) {
+        if ($link_result) {
             if ($flag == 'list') {
-                    return $list = mysqli_fetch_all($link_result, MYSQLI_ASSOC);
+                return $list = mysqli_fetch_all($link_result, MYSQLI_ASSOC);
             }
-                if ($flag == 'item') {
-                    return $list = mysqli_fetch_assoc($link_result);
-                }
+            if ($flag == 'item') {
+                return $list = mysqli_fetch_assoc($link_result);
+            }
         }
     }
 
@@ -190,30 +190,42 @@
         }
     }
 
+    // функция форматирования времени для списка ставок
+    function time_left($time_in) {
+        $time = strtotime($time_in);
 
-function time_left($time_in) {
-    $time = strtotime($time_in);
+        $month = date('n', $time); // присваиваем месяц от timestamp
+        $day = date('j', $time);
+        $year = date('Y', $time);
 
-    $month = date('n', $time); // присваиваем месяц от timestamp
-    $day = date('j', $time);
-    $year = date('Y', $time);
+        $hour = date('G', $time);
+        $min = date('i', $time);
+        $date = $day . '.' . $month . '.' . $year . '  в ' . $hour . ':' . $min;
+        $diff = time() - $time; // от текущего времени отнимает время ставки (в секундах)
 
-    $hour = date('G', $time);
-    $min = date('i', $time);
-    $date = $day. '.'.$month. '.'.$year. '  в '.$hour. ':'.$min;
-    $diff = time() - $time; // от текущего времени отнимает время ставки (в секундах)
-
-    if ($diff < 59) { // если разница меньше 59сек
-        return $diff. " сек. назад"; //то возвращаем разницу с "сек. назад"
-    } elseif($diff / 60 > 1 and $diff / 60 < 59) { // если от 1 до 60 минут
-        return round($diff / 60). " мин. назад"; //то возвращаем разницу
-    } elseif($diff / 3600 > 1 and $diff / 3600 < 23) { // если от 1 до 23 часов
-        return round($diff / 3600). " час. назад";
-    }else{
-        return $date;
+        if ($diff < 59) { // если разница меньше 59сек
+            return $diff . " сек. назад"; //то возвращаем разницу с "сек. назад"
+        } elseif ($diff / 60 > 1 and $diff / 60 < 59) { // если от 1 до 60 минут
+            return round($diff / 60) . " мин. назад"; //то возвращаем разницу
+        } elseif ($diff / 3600 > 1 and $diff / 3600 < 23) { // если от 1 до 23 часов
+            return round($diff / 3600) . " час. назад";
+        } else {
+            return $date;
+        }
     }
-}
 
+    // функция определения количества ставок от юзера
+    function count_users_bets($bets_array, $user_id) {
+        $count = 0;
+
+        foreach ($bets_array as $key ) {
+
+           if($key['users_id'] == $user_id) {
+               $count++;
+           }
+        }
+        return $count;
+    }
 
 
 

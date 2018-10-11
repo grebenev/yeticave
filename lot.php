@@ -15,12 +15,16 @@
     require_once('db.php');
     require_once('functions.php');
 
+    // узнаем id залогиненого пользователя
+    $user_id = $_SESSION['user']['id'];
+
     // Запросы
-    $lot_data_sql = 'SELECT lots.id, creation_date, lot_name, description, image, start_price, end_date, lot_step, category_name FROM lots 
+    $lot_data_sql = 'SELECT lots.id, creation_date, lot_name, description, image, start_price, end_date, lot_step, users_id, category_name FROM 
+lots 
     JOIN categories ON categories.id = lots.categories_id WHERE lots.id = ' . $lot_show;
 
-    $bet_sql = 'SELECT bets.id, bet_date, amount, user_name FROM bets 
-    JOIN users ON users.id = bets.users_id WHERE lots_id = ' . $lot_show;
+    $bet_sql = 'SELECT bets.id, bet_date, amount, users_id, user_name  FROM bets 
+    JOIN users ON users.id = bets.users_id WHERE lots_id = '. $lot_show.'  ORDER BY bet_date DESC';
 
     //вызовы функции
     $categories_list = get_data_db($link, $categories_sql, 'list');
@@ -32,6 +36,10 @@
     $start_price = $lot_data['start_price'];
     $step = $lot_data['lot_step'];
 
+  // вызов функции посчета ставок по залогиненому id в отдельном лоте
+  $total_count = count_users_bets($bet_list , $user_id);
+  var_dump($total_count);
+
     // проверяем данные в массиве POST
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $cost = $_POST['cost'];
@@ -39,7 +47,7 @@
         if(empty($cost)){
             $error_bet = 'Надо заполнить';
 
-        } else {//если не поустое
+        } else {//если не поуст
             $error_bet = '';
 
             if (!filter_var($cost, FILTER_VALIDATE_INT)) {
@@ -60,12 +68,8 @@
                 } else {
                     $error_bet = 'Увеличте ставку';
                 }
-
-
             }
         }
-
-
     }
 
 
@@ -76,7 +80,7 @@
 
     } else {
 
-        $content = include_template('lot.php', compact('lot_data', 'bet_list', 'lot_data', 'categories_list', 'error_bet'));
+        $content = include_template('lot.php', compact('lot_data', 'bet_list', 'categories_list', 'error_bet', 'total_count'));
 
     }
     if($error) {
