@@ -35,7 +35,6 @@ JOIN categories ON categories.id = lots.categories_id WHERE lots.categories_id =
         $result = mysqli_stmt_get_result($stmt);
 
         $lots_list = mysqli_fetch_all($result, MYSQLI_ASSOC);
-        var_dump(count($lots_list));
         $error = '';
 
         // создаем постой числовой  массив с числами от 1 до $pages_count
