@@ -14,7 +14,7 @@
 
     $lots_list = get_data_db($link, $lots_list_sql, 'list');
 
-    $content = include_template('index.php', compact('lots_list', 'categories_list', 'hours', 'minutes'));
+    $content = include_template('index.php', compact('lots_list', 'categories_list'));
     $layout_content = include_template('layout.php', compact('content', 'categories_list', 'title'));
 
     print($layout_content);

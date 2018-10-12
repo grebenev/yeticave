@@ -26,7 +26,7 @@ JOIN categories ON categories.id = lots.categories_id WHERE lots.categories_id =
 
 
         if (count($lots_list) > 0) {
-            $content = include_template('all-lots.php', compact('lots_list', 'categories_list', 'hours', 'minutes'));
+            $content = include_template('all-lots.php', compact('lots_list', 'categories_list'));
         } else {
             $error = 'Нет такой категории';
         }
