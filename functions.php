@@ -29,15 +29,16 @@
     }
 
     // функция времени существования лота
-    function time_to_end($lot_time_end) {// текущий timestamp
-        $time_now = time();
-        $secs_to_end = strtotime($lot_time_end) - $time_now;
-        // округление часов деленое на кол-во секунд в часе. 3600с - это 1 час
-        $hours = floor($secs_to_end / 3600);
+    function time_to_end($time_in) {// текущий timestamp
+        $time = strtotime($time_in);
 
-        //округление минут
-        $minutes = floor(($secs_to_end % 3600) / 60);
-        return $hours . ':' . $minutes . '';
+        $diff = $time - time();
+        $diff_sec = floor($diff % 60);
+        $diff_min = floor($diff % 3600 /60);
+        $diff_hour = floor($diff / (60 * 60));
+
+        $date =  $diff_hour . ':' . $diff_min. ':' . $diff_sec;
+        return $date;
     }
 
     // функция вывода ошибок
