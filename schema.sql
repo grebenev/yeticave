@@ -17,7 +17,7 @@ CREATE TABLE lots (
   description TEXT,
   image CHAR(128),
   start_price INT(16),
-  end_date DATE,
+  end_date DATETIME,
   lot_step CHAR(128),
   users_id INT(8),
   winners_id INT(8),
