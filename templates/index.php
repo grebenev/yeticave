@@ -16,7 +16,10 @@
     </div>
     <ul class="lots__list">
         <!--заполните этот список из массива с товарами-->
-        <?php foreach ($lots_list as $key): ?>
+        <?php foreach ($lots_list as $key):
+            $spend_time= strtotime($key['end_date']);
+            if(time() < $spend_time): ?>
+
             <li class="lots__item lot">
                 <div class="lot__image">
                     <img src="img/<?=$key['image']; ?>" width="350" height="260" alt="">
@@ -35,6 +38,7 @@
                     </div>
                 </div>
             </li>
-        <?php endforeach; ?>
+        <?php endif;
+        endforeach; ?>
     </ul>
 </section>
