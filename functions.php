@@ -29,16 +29,22 @@
     }
 
     // функция времени существования лота
-    function time_to_end($time_in) {// текущий timestamp
-        $time = strtotime($time_in);
+    function time_to_end($lot_time_end) {// текущий timestamp
 
-        $diff = $time - time();
-        $diff_sec = floor($diff % 60);
-        $diff_min = floor($diff % 3600 /60);
-        $diff_hour = floor($diff / (60 * 60));
-
-        $date =  $diff_hour . ':' . $diff_min. ':' . $diff_sec;
-        return $date;
+        if (strtotime($lot_time_end) < time()) {
+            return '00:00';
+        }
+        $dt_end = new DateTime($lot_time_end);
+        $remain = $dt_end->diff(new DateTime());
+        if ($remain->d > 0) {
+            return $remain->d . ' дней';
+        } else if ($remain->h > 0) {
+            return $remain->h . ' часов';
+        } else if ($remain->i > 0) {
+            return $remain->i . ' мин.';
+        } else {
+            return $remain->s . ' сек.';
+        }
     }
 
     // функция вывода ошибок
@@ -219,11 +225,11 @@
     function count_users_bets($bets_array, $user_id) {
         $count = 0;
 
-        foreach ($bets_array as $key ) {
+        foreach ($bets_array as $key) {
 
-           if($key['users_id'] == $user_id) {
-               $count++;
-           }
+            if ($key['users_id'] == $user_id) {
+                $count++;
+            }
         }
         return $count;
     }
