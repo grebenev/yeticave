@@ -11,7 +11,8 @@
         </div>
         <div class="lot-item__right">
             <?php if (isset($_SESSION['user'])):
-                if ($lot_data['users_id']!==$_SESSION['user']['id'] && !$total_count):?>
+                $spend_time= strtotime($lot_data['end_date']);
+                 if ($lot_data['users_id']!==$_SESSION['user']['id'] && !$total_count && time() < $spend_time):?>
                 <div class="lot-item__state">
                     <div class="lot-item__timer timer">
                         <?=time_to_end($lot_data['end_date'])?>
