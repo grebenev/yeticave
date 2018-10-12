@@ -74,9 +74,10 @@
 
             $sql = 'INSERT INTO lots (creation_date, categories_id, lot_name, description, image, start_price, lot_step, users_id, end_date)
             VALUES (NOW(), ?, ?, ?, ?, ?, ?, '.$user_id.', ?)';
+            $lot_data = $lot['date'].' '.date("H:i:s");
 
             $stmt = db_get_prepare_stmt($link, $sql, [$lot['category'], $lot['name'], $lot['message'],
-                $lot['path'], $lot['price'], $lot['step'], $lot['date']]);
+                $lot['path'], $lot['price'], $lot['step'], $lot_data]);
             $res = mysqli_stmt_execute($stmt); // выполняем подготовленное выражение
 
             if ($res) {
