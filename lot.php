@@ -64,7 +64,7 @@ lots
         if(empty($cost)){
             $error_bet = 'Надо заполнить';
 
-        } else {//если не поуст
+        } else {//если не пуст
             $error_bet = '';
 
             if (!filter_var($cost, FILTER_VALIDATE_INT)) {
@@ -81,6 +81,13 @@ lots
                     //подготавливаем выражение и выполняем
                     $stmt = db_get_prepare_stmt($link, $bet_sql, [$cost]);
                     $res = mysqli_stmt_execute($stmt);
+
+                    if ($res) {
+                        header("Location: lot.php?lot=" . $lot_show);
+
+                    } else {
+                        $content = include_template('error.php', ['error' => mysqli_error($link)]);
+                    }
 
                 } else {
                     $error_bet = 'Увеличте ставку';
