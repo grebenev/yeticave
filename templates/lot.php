@@ -28,7 +28,7 @@
                     <form class="lot-item__form" action="" method="post">
                         <p class="lot-item__form-item">
                             <label for="cost">Ваша ставка</label>
-                            <?php $placeholder = isset($error_bet) ? $error_bet :htmlspecialchars($lot_data['lot_step']); ?>
+                            <?php $placeholder = isset($error_bet) ? $error_bet :htmlspecialchars($lot_data['lot_step'] + $current_price); ?>
                             <input id="cost" type="text" name="cost" placeholder="<?=$placeholder; ?>">
                         </p>
                         <button type="submit" class="button">Сделать ставку</button>
@@ -36,7 +36,8 @@
                 </div>
                     <?php endif; ?>
                 <div class="history">
-                    <h3>История ставок (<span>10</span>)</h3>
+                    <?php $bet_count = count($bet_list); ?>
+                    <h3>История ставок (<span><?=$bet_count; ?></span>)</h3>
                     <table class="history__list">
                         <?php foreach ($bet_list as $key): ?>
                             <tr class="history__item">
