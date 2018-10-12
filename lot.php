@@ -1,6 +1,5 @@
 <?php
-
-    session_start ();
+    session_start();
     $lot_show = intval($_GET['lot']);
 
     $cookie_name = "save_id";
@@ -10,33 +9,106 @@
 
     if (isset($_COOKIE['save_id'])) {
         $url_id = $lot_show;
-     }
-
+    }
     setcookie($cookie_name, $url_id, $expire, $path);
 
     require_once('db.php');
     require_once('functions.php');
 
-// Запросы
-    $lot_data_sql = 'SELECT lots.id, creation_date, lot_name, description, image, start_price, end_date, lot_step, category_name FROM lots 
+
+
+
+    // Запросы
+    $lot_data_sql = 'SELECT lots.id, creation_date, lot_name, description, image, start_price, end_date, lot_step, users_id, category_name FROM 
+lots 
     JOIN categories ON categories.id = lots.categories_id WHERE lots.id = ' . $lot_show;
 
-    $bet_sql = 'SELECT bets.id, bet_date, amount, user_name FROM bets 
-    JOIN users ON users.id = bets.users_id WHERE bets.id = ' . $lot_show;
+    $bet_sql = 'SELECT bets.id, bet_date, amount, users_id, user_name  FROM bets 
+    JOIN users ON users.id = bets.users_id WHERE lots_id = '. $lot_show.'  ORDER BY bet_date DESC';
 
-//вызовы функции
+    $max_price_sql = 'SELECT MAX(amount) FROM bets WHERE lots_id = '. $lot_show.'';
+
+    //вызовы функции список категорий, данные для лота, список ставок, максимальная ставка
     $categories_list = get_data_db($link, $categories_sql, 'list');
-//    $current_user = get_data_db($link, $user_sql, 'list');
     $lot_data = get_data_db($link, $lot_data_sql, 'item');
     $bet_list = get_data_db($link, $bet_sql, 'list');
+    $max_price = get_data_db($link, $max_price_sql, 'item');
+    $error = '';
+
+    // узнаем id залогиненого пользователя
+    if (isset($_SESSION['user'])){
+        $user_id = $_SESSION['user']['id'];
+        // вызов функции посчета ставок по залогиненому id в отдельном лоте
+        $total_count = count_users_bets($bet_list , $user_id);
+    }
+
+    // выделяем из возвращенного массива цену и шаг
+    $start_price = $lot_data['start_price'];
+    $step = $lot_data['lot_step'];
+    $current_price = 0;
+    $max = $max_price['MAX(amount)'];
+
+
+    if($max > $start_price) {
+        $current_price =  $max;
+    } else {
+        $current_price =  $start_price;
+    }
+
+
+
+    // проверяем данные в массиве POST
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        $cost = $_POST['cost'];
+
+        if(empty($cost)){
+            $error_bet = 'Надо заполнить';
+
+        } else {//если не пуст
+            $error_bet = '';
+
+            if (!filter_var($cost, FILTER_VALIDATE_INT)) {
+                $error_bet = 'Это не число';
+
+            } else {//если число
+
+                if($cost >= $current_price + $step) { //проверяем что больше чем цена + шаг
+
+                    $user_id = $_SESSION['user']['id'];
+                    $bet_sql = 'INSERT INTO bets (bet_date, amount, users_id, lots_id) VALUES (NOW(), ?, ' .$user_id.', 
+                '.$lot_show.')';
+
+                    //подготавливаем выражение и выполняем
+                    $stmt = db_get_prepare_stmt($link, $bet_sql, [$cost]);
+                    $res = mysqli_stmt_execute($stmt);
+
+                    if ($res) {
+                        header("Location: lot.php?lot=" . $lot_show);
+
+                    } else {
+                        $content = include_template('error.php', ['error' => mysqli_error($link)]);
+                    }
+
+                } else {
+                    $error_bet = 'Увеличте ставку';
+                }
+            }
+        }
+    }
+
+
 
     if (!isset($lot_data)) {
         http_response_code(404);
-        $content = include_template('error.php', ['error' => 'Ошибка 404. Запрашиваемый документ не найден!']);
-    } else {
-        $lot_aside_content = include_template('lot-aside.php', compact('lot_data', 'bet_list'));
-        $content = include_template('lot.php', compact('lot_aside_content', 'lot_data', 'categories_list'));
+        $error = 'Ошибка 404';
 
+    } else {
+
+        $content = include_template('lot.php', compact('lot_data', 'bet_list', 'categories_list', 'error_bet', 'total_count' ,'current_price'));
+
+    }
+    if($error) {
+        $content = include_template('error.php', compact('error'));
     }
 
     $title = $lot_data['lot_name'];

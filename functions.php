@@ -1,71 +1,84 @@
 <?php
+    // установка локали
+    date_default_timezone_set("Europe/Moscow");
 
-    function include_template ($name, $data) {
+    //запрос для вывода категорий по всем вложенным страницам
+    $categories_sql = 'SELECT id, category_name, class_name FROM categories';
+
+    // функция шаблонизации
+    function include_template($name, $data) {
         $name = 'templates/' . $name;
         $result = '';
-        if (!file_exists ($name)) {
+        if (!file_exists($name)) {
             return $result;
         }
-        ob_start ();
-        extract ($data);
+        ob_start();
+        extract($data);
         require $name;
-        $result = ob_get_clean ();
+        $result = ob_get_clean();
         return $result;
     }
 
-
-    function transform_format ($number) {
-        $integer = ceil ($number);
+    // функция форматирования цены
+    function transform_format($number) {
+        $integer = ceil($number);
         if ($integer > 1000) {
-            $integer = number_format ($integer, 0, '', ' ');
+            $integer = number_format($integer, 0, '', ' ');
         }
         return $integer .= ' ₽';
     }
 
-    function time_to_end ($lot_time_create, $lot_time_end) {// текущий timestamp
-        $secs_to_midnight = strtotime ($lot_time_end) - strtotime ($lot_time_create);
-// округление часов деленое на кол-во секунд в часе.
-        $hours = floor ($secs_to_midnight / 3600);
-// округление минут
-        $minutes = floor (($secs_to_midnight % 3600) / 60);
-        return $hours . ' часов ' . $minutes . ' минут ';
-    }
+    // функция времени существования лота
+    function time_to_end($lot_time_end) {// текущий timestamp
 
-// запросы
-    if (isset($_SESSION['user'])) {
-        $user_id = $_SESSION['user']['id'];
-    }
-
-
-    $categories_sql = 'SELECT id, category_name, class_name FROM categories';
-//    $user_sql = 'SELECT id, user_name, avatar FROM users WHERE id = '. $user_id.'';
-    $lots_list_sql = 'SELECT lots.id, creation_date, end_date, lot_name, image, start_price, category_name FROM lots JOIN categories ON categories.id = lots.categories_id ORDER BY creation_date DESC';
-
-// функция вывода ошибок
-    function show_error (&$content, $error) {
-        $content = include_template ('error.php', ['error' => $error]);
-    }
-
-// функция получения данных из базы
-    function get_data_db ($link, $sql, $flag) {
-
-        if (!$link) {
-            $error = mysqli_connect_error ();
-            show_error ($content, $error);
+        if (strtotime($lot_time_end) < time()) {
+            return '00:00';
+        }
+        $dt_end = new DateTime($lot_time_end);
+        $remain = $dt_end->diff(new DateTime());
+        if ($remain->d > 0) {
+            return $remain->d . ' дней';
+        } else if ($remain->h > 0) {
+            return $remain->h . ' часов';
+        } else if ($remain->i > 0) {
+            return $remain->i . ' мин.';
         } else {
-            $result = mysqli_query ($link, $sql);
+            return $remain->s . ' сек.';
+        }
+    }
 
-            if ($result) {
-                if ($flag == 'list') {
-                    return $list = mysqli_fetch_all ($result, MYSQLI_ASSOC);
-                }
-                if ($flag == 'item') {
-                    return $list = mysqli_fetch_assoc ($result);
-                }
+    // функция вывода ошибок
+    function show_error(&$content, $error) {
+        $content = include_template('error.php', ['error' => $error]);
+    }
 
+    // функция подключения к базе
+    function get_link_db($link, $sql) {
+        if (!$link) {
+            $error = mysqli_connect_error();
+            show_error($content, $error);
+        } else {
+            $result = mysqli_query($link, $sql);
+            if (!$result) {
+                $error = mysqli_error($link);
+                show_error($content, $error);
             } else {
-                $error = mysqli_error ($link);
-                show_error ($content, $error);
+                return $result;
+            }
+        }
+    }
+
+    // функция получения данных из базы
+    function get_data_db($link, $sql, $flag) {
+
+        $link_result = get_link_db($link, $sql);
+
+        if ($link_result) {
+            if ($flag == 'list') {
+                return $list = mysqli_fetch_all($link_result, MYSQLI_ASSOC);
+            }
+            if ($flag == 'item') {
+                return $list = mysqli_fetch_assoc($link_result);
             }
         }
     }
@@ -79,10 +92,10 @@
      *
      * @return mysqli_stmt Подготовленное выражение
      */
-    function db_get_prepare_stmt ($link, $sql, $data = []) {
-        $stmt = mysqli_prepare ($link, $sql);
+    function db_get_prepare_stmt($link, $sql, $data = []) {
+        $stmt = mysqli_prepare($link, $sql);
         if ($stmt == false) {
-            die("<pre>MYSQL ERROR:" . mysqli_error ($link) . PHP_EQL . $sql . "</pre>");
+            die("<pre>MYSQL ERROR:" . mysqli_error($link) . PHP_EQL . $sql . "</pre>");
         }
 
         if ($data) {
@@ -92,11 +105,11 @@
             foreach ($data as $value) {
                 $type = null;
 
-                if (is_int ($value)) {
+                if (is_int($value)) {
                     $type = 'i';
-                } else if (is_string ($value)) {
+                } else if (is_string($value)) {
                     $type = 's';
-                } else if (is_double ($value)) {
+                } else if (is_double($value)) {
                     $type = 'd';
                 }
 
@@ -106,7 +119,7 @@
                 }
             }
 
-            $values = array_merge ([$stmt, $types], $stmt_data);
+            $values = array_merge([$stmt, $types], $stmt_data);
 
             $func = 'mysqli_stmt_bind_param';
             $func(...$values);
@@ -116,8 +129,8 @@
 
     }
 
-// функция валидации
-    function validate_register ($data, $link) {
+    // функция валидации
+    function validate_register($data, $link) {
         $required = ['email', 'password', 'name', 'contacts'];
         $errors = [];
 
@@ -127,14 +140,14 @@
             }
         }
         if (!empty($data['email'])) {
-            $email = mysqli_real_escape_string ($link, $data['email']);
-            if (!filter_var ($email, FILTER_VALIDATE_EMAIL)) {
+            $email = mysqli_real_escape_string($link, $data['email']);
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 $errors['email'] = 'Email должен быть корректным';
 
             } else {
                 $sql = "SELECT id FROM users WHERE email = '$email'";
-                $res = mysqli_query ($link, $sql);
-                if (mysqli_num_rows ($res) > 0) {
+                $res = mysqli_query($link, $sql);
+                if (mysqli_num_rows($res) > 0) {
                     $errors['email'] = 'Пользователь с этим email уже зарегистрирован';
                 }
             }
@@ -142,15 +155,15 @@
         if (!empty($_FILES['jpg_image']['name'])) {
             $tmp_name = $_FILES['jpg_image']['tmp_name'];
 
-            $finfo = finfo_open (FILEINFO_MIME_TYPE);
-            $file_type = finfo_file ($finfo, $tmp_name);
+            $finfo = finfo_open(FILEINFO_MIME_TYPE);
+            $file_type = finfo_file($finfo, $tmp_name);
 
-            if ($file_type !== "image/jpeg") {
-                $errror['file'] = 'Загрузите картинку в формате JPEG';
+            if (!in_array($file_type, ['image/jpeg', 'image/png'])) {
+                $errors['file'] = 'Загрузите картинку в формате JPEG или PNG';
 
             } else {
-                $filename = uniqid () . '.jpg';
-                move_uploaded_file ($tmp_name, 'img/' . $filename);
+                $filename = uniqid() . '.jpg';
+                move_uploaded_file($tmp_name, 'img/' . $filename);
             }
         } else {
             $filename = '';
@@ -164,19 +177,19 @@
         }
     }
 
-// функция регистрации
-    function register ($data, $link) {
+    // функция регистрации
+    function register($data, $link) {
 
-        $validate = validate_register ($data, $link);
+        $validate = validate_register($data, $link);
 
-        if (!is_array ($validate)) {
+        if (!is_array($validate)) {
 
             $data['path'] = $validate;
-            $password = password_hash ($data['password'], PASSWORD_DEFAULT);
+            $password = password_hash($data['password'], PASSWORD_DEFAULT);
             $sql = 'INSERT INTO users (registration_date, email, user_name, password, avatar, contacts)
             VALUES (NOW(), ?, ?, ?, ?, ?)';
-            $stmt = db_get_prepare_stmt ($link, $sql, [$data['email'], $data['name'], $password, $data['path'], $data['contacts']]);
-            $res = mysqli_stmt_execute ($stmt);
+            $stmt = db_get_prepare_stmt($link, $sql, [$data['email'], $data['name'], $password, $data['path'], $data['contacts']]);
+            $res = mysqli_stmt_execute($stmt);
 
             return true;
         } else {
@@ -184,6 +197,42 @@
         }
     }
 
+    // функция форматирования времени для списка ставок
+    function time_left($time_in) {
+        $time = strtotime($time_in);
+
+        $month = date('n', $time); // присваиваем месяц от timestamp
+        $day = date('j', $time);
+        $year = date('Y', $time);
+
+        $hour = date('G', $time);
+        $min = date('i', $time);
+        $date = $day . '.' . $month . '.' . $year . '  в ' . $hour . ':' . $min;
+        $diff = time() - $time; // от текущего времени отнимает время ставки (в секундах)
+
+        if ($diff < 59) { // если разница меньше 59сек
+            return $diff . " сек. назад"; //то возвращаем разницу с "сек. назад"
+        } elseif ($diff / 60 > 1 and $diff / 60 < 59) { // если от 1 до 60 минут
+            return round($diff / 60) . " мин. назад"; //то возвращаем разницу
+        } elseif ($diff / 3600 > 1 and $diff / 3600 < 23) { // если от 1 до 23 часов
+            return round($diff / 3600) . " час. назад";
+        } else {
+            return $date;
+        }
+    }
+
+    // функция определения количества ставок от юзера
+    function count_users_bets($bets_array, $user_id) {
+        $count = 0;
+
+        foreach ($bets_array as $key) {
+
+            if ($key['users_id'] == $user_id) {
+                $count++;
+            }
+        }
+        return $count;
+    }
 
 
 

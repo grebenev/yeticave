@@ -7,5 +7,6 @@
 *.sublime*
 *.jpeg
 *.jpg
+*.html
 Thumbs.db
 vendor

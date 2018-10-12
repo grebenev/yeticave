@@ -1,5 +1,4 @@
 <?php
-
     session_start();
     require_once('db.php');
     require_once('functions.php');
@@ -58,10 +57,8 @@
             if (isset($_COOKIE['save_id'])) {
                 $url_id = $_COOKIE['save_id'];
             }
-
-
             $username = $_SESSION['user']['user_name'];
-            $content = include_template('welcome.php', compact('username', 'categories_list'));
+            header("Location: /");
 
         } else {
             $content = include_template('login.php', compact('categories_list'));

@@ -5,7 +5,7 @@
         <!--заполните этот список из массива категорий-->
         <?php foreach ($categories_list as $key): ?>
             <li class="promo__item  promo__item--<?=$key['class_name']; ?>">
-                <a class="promo__link" href="pages/all-lots.html"><?=$key['category_name']; ?></a>
+                <a class="promo__link" href="all-lots.php?category=<?=$key['id']; ?>"><?=$key['category_name']; ?></a>
             </li>
         <?php endforeach; ?>
     </ul>
@@ -16,7 +16,10 @@
     </div>
     <ul class="lots__list">
         <!--заполните этот список из массива с товарами-->
-        <?php foreach ($lots_list as $key): ?>
+        <?php foreach ($lots_list as $key):
+            $spend_time= strtotime($key['end_date']);
+            if(time() < $spend_time): ?>
+
             <li class="lots__item lot">
                 <div class="lot__image">
                     <img src="img/<?=$key['image']; ?>" width="350" height="260" alt="">
@@ -29,12 +32,13 @@
                             <span class="lot__amount">Стартовая цена</span>
                             <span class="lot__cost"><?=transform_format(htmlspecialchars($key['start_price'])); ?></span>
                         </div>
-                        <div class="lot__timer timer"><?=time_to_end($key['creation_date'], $key['end_date']) ?>
+                        <div class="lot__timer timer"><?=time_to_end($key['end_date']); ?>
 
                         </div>
                     </div>
                 </div>
             </li>
-        <?php endforeach; ?>
+        <?php endif;
+        endforeach; ?>
     </ul>
 </section>
