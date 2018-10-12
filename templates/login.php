@@ -1,4 +1,4 @@
-<?= include('top-nav.php'); ?>
+<?php include('top-nav.php'); ?>
 <?php $class_name = isset($errors) ? "form--invalid" :""; ?>
 <form class="form container <?=$class_name;?>" action="" method="post"> <!-- form--invalid -->
     <h2>Вход</h2>

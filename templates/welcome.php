@@ -1,4 +1,4 @@
-<?= include('top-nav.php'); ?>
+<?php include('top-nav.php'); ?>
 <main class="container">
     <div class="content__main-col">
         <header class="content__header">

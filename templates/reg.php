@@ -1,4 +1,4 @@
-<?= include('top-nav.php'); ?>
+<?php include('top-nav.php'); ?>
 <?php $class_name = isset($is_register) ? "form--invalid" :""; ?>
 <form class="form container <?=$class_name;?>" action="" method="post" enctype="multipart/form-data"> <!-- form--invalid -->
     <h2>Регистрация нового аккаунта</h2>

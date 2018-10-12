@@ -1,4 +1,4 @@
-<?= include('top-nav.php'); ?>
+<?php include('top-nav.php'); ?>
 <?php $class_name = isset($errors) ? "form--invalid" :""; ?>
 <form class="form form--add-lot container <?=$class_name;?>" action="" method="post" enctype="multipart/form-data"> <!-- form--invalid
  -->

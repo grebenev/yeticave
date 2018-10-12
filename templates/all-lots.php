@@ -1,4 +1,4 @@
-<?= include('top-nav.php'); ?>
+<?php include('top-nav.php'); ?>
 <div class="container">
     <section class="lots">
         <h2>Все лоты в категории <span>« »</span></h2>

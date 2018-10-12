@@ -1,4 +1,4 @@
-<?= include('top-nav.php'); ?>
+<?php include('top-nav.php'); ?>
 <div class="container">
     <section class="lots">
         <?php if($error): ?>

@@ -1,4 +1,4 @@
-<?= include_once('top-nav.php'); ?>
+<?php include_once('top-nav.php'); ?>
 <section class="lot-item container">
     <h2><?= htmlspecialchars($lot_data['lot_name']); ?></h2>
     <div class="lot-item__content">
