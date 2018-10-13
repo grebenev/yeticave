@@ -30,4 +30,6 @@
 
         </ul>
     </section>
+    <?=include_template('pagination_block.php', ['pages' => $pages, 'pages_count' => $pages_count,'cur_page' =>
+        $cur_page]); ?>
 </div>
