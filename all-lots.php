@@ -8,7 +8,7 @@
     $content = include_template('all-lots.php', compact('categories_list'));
 
     // ждем запроса с id категории
-    $category_id = $_GET['category'] ?? 1;
+    $category_id = intval($_GET['category'] ?? 1);
     $cur_page = intval($_GET['page'] ?? 1); // если данных не пришло page = 1
     $page_items = 6; // кол-во лотов на странице
 
@@ -50,7 +50,7 @@ JOIN categories ON categories.id = lots.categories_id WHERE lots.categories_id =
         if (count($lots_list) > 0) {
             $content = include_template('all-lots.php', compact('lots_list', 'categories_list', 'pages', 'pages_count', 'cur_page', 'category_id', 'category_name'));
         } else {
-            $error = 'Нет такой категории';
+            $error = 'Нет запрашиваемого документа';
         }
 
     } else {
