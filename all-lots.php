@@ -19,17 +19,21 @@
         $category_name = mysqli_fetch_assoc($category_result)['category_name'];
         $title = 'Все лоты в категории «'.$category_name.'»';
 
-        //сапрос общего количества лотов в таблице
-        $result = mysqli_query($link, 'SELECT COUNT(*) as count_lots FROM lots WHERE categories_id ='.$category_id.'');
+        $lots_sql= 'SELECT * FROM lots WHERE categories_id ='.$category_id.'';
 
-        // в переменную $items_count записали общее количество записей в в алиасе count_lots
-        $items_count = mysqli_fetch_assoc($result)['count_lots'];
+        // проверяеам подключение функцией get_link_db и в $items_array выводим массив карточек(лотов)
+        $link_result = get_link_db($link, $lots_sql);
+        if ($link_result) {
+            $items_array = mysqli_fetch_all($link_result);
 
-        // делим общее число записей на число страниц резкльтат округляем и присваиваем $pages_count
-        $pages_count = ceil($items_count / $page_items);
+            // функция пагинации /на входе массив карточек(лотов), кол-во карточек на странице, текущая страница из GET
+            $pagination_result = get_pagination($items_array, $page_items, $cur_page);
 
-        // вычисляем смещение это текущая страница - 1 * на число лотов на странице (6)
-        $offset = ($cur_page - 1) * $page_items;
+            $pages_count = $pagination_result['pages_count'];
+            $offset = $pagination_result['offset'];
+            $pages = $pagination_result['pages'];
+        }
+
 
 
         $category_sql = 'SELECT lots.id, creation_date, end_date, lot_name, image, start_price, category_name FROM lots 
@@ -42,8 +46,6 @@ JOIN categories ON categories.id = lots.categories_id WHERE lots.categories_id =
         $lots_list = mysqli_fetch_all($result, MYSQLI_ASSOC);
         $error = '';
 
-        // создаем постой числовой  массив с числами от 1 до $pages_count
-        $pages = range(1, $pages_count);
 
         if (count($lots_list) > 0) {
             $content = include_template('all-lots.php', compact('lots_list', 'categories_list', 'pages', 'pages_count', 'cur_page', 'category_id', 'category_name'));
