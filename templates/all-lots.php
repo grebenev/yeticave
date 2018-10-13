@@ -1,7 +1,7 @@
 <?php include('top-nav.php'); ?>
 <div class="container">
     <section class="lots">
-        <h2>Все лоты в категории <span>« »</span></h2>
+        <h2>Все лоты в категории <span>«<?=$category_name; ?>»</span></h2>
         <ul class="lots__list">
             <?php foreach ($lots_list as $key):
             $spend_time= strtotime($key['end_date']);
