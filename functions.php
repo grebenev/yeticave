@@ -234,25 +234,16 @@
         return $count;
     }
 
-    // функция пагинации
-    function get_pagination($array, $items_on_page, $current_page) {
+    //функция разрезания массива
+    function get_array_slice($array, $items_on_page, $current_page) {
 
-        $pagination = [];
-        $all_rows = count($array);
 
-        // округляем в большую сторону все записи деленное на число карточек на странице, получаем число сторниц
-        $pages_count = ceil($all_rows / $items_on_page);
-
-        // вычисляем смещение это текущая страница - 1 * на число каротчек на странице (6)
         $offset = ($current_page - 1) * $items_on_page;
-
-        // создаем постой числовой  массив с числами от 1 до $pages_count
-        $pages = range(1, $pages_count);
-
-        return $pagination = ['pages_count' => $pages_count, 'offset' => $offset, 'pages' => $pages];
-
-
+        $result = array_slice($array, $offset, $items_on_page);
+        return $result;
     }
+
+
 
 
 
