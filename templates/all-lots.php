@@ -1,9 +1,9 @@
 <?php include('top-nav.php'); ?>
 <div class="container">
     <section class="lots">
-        <h2>Все лоты в категории <span>« »</span></h2>
+        <h2>Все лоты в категории <span>«<?=$category_name; ?>»</span></h2>
         <ul class="lots__list">
-            <?php foreach ($lots_list as $key):
+            <?php foreach ($slice_list as $key):
             $spend_time= strtotime($key['end_date']);
             if(time() < $spend_time): ?>
                 <li class="lots__item lot">
@@ -29,12 +29,6 @@
 
         </ul>
     </section>
-    <ul class="pagination-list">
-        <li class="pagination-item pagination-item-prev"><a>Назад</a></li>
-        <li class="pagination-item pagination-item-active"><a>1</a></li>
-        <li class="pagination-item"><a href="#">2</a></li>
-        <li class="pagination-item"><a href="#">3</a></li>
-        <li class="pagination-item"><a href="#">4</a></li>
-        <li class="pagination-item pagination-item-next"><a href="#">Вперед</a></li>
-    </ul>
+    <?=include_template('pagination_block.php', ['pages' => $pages, 'pages_count' => $pages_count,'cur_page' =>
+        $cur_page,'category_id' => $category_id]); ?>
 </div>

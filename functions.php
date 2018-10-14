@@ -234,6 +234,16 @@
         return $count;
     }
 
+    //функция разрезания массива
+    function get_array_slice($array, $items_on_page, $current_page) {
+
+
+        $offset = ($current_page - 1) * $items_on_page;
+        $result = array_slice($array, $offset, $items_on_page);
+        return $result;
+    }
+
+
 
 
 

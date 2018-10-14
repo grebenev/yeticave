@@ -1,4 +1,5 @@
 <?php include('top-nav.php'); ?>
+
 <div class="container">
     <section class="lots">
         <?php if($error): ?>
@@ -6,7 +7,7 @@
         <?php else: ?>
         <h2>Результаты поиска по запросу «<span><?=$search; ?></span>»</h2>
         <ul class="lots__list">
-            <?php foreach ($search_list as $key): ?>
+            <?php foreach ($slice_list as $key): ?>
                 <li class="lots__item lot">
                     <div class="lot__image">
                         <img src="img/<?=$key['image']; ?>" width="350" height="260" alt="">
@@ -19,15 +20,21 @@
                                 <span class="lot__amount">Стартовая цена</span>
                                 <span class="lot__cost"><?=transform_format(htmlspecialchars($key['start_price'])); ?></span>
                             </div>
-                            <div class="lot__timer timer"><?=time_to_end($key['creation_date'], $key['end_date']) ?>
+                            <div class="lot__timer timer"><?=time_to_end($key['end_date']); ?>
 
                             </div>
                         </div>
                     </div>
                 </li>
             <?php endforeach; ?>
-        <?php endif; ?>
+
 
         </ul>
     </section>
+    <?php if ( $pages_count > 1): ?>
+    <?=include_template('pagination_block2.php', ['pages' => $pages, 'pages_count' => $pages_count,'cur_page' =>
+        $cur_page, 'search' => $search]); ?>
+    <?php endif; ?>
+    <?php endif; ?>
 </div>
+
