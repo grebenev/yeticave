@@ -19,25 +19,8 @@
         $category_name = mysqli_fetch_assoc($category_result)['category_name'];
         $title = 'Все лоты в категории «'.$category_name.'»';
 
-        $lots_sql= 'SELECT * FROM lots WHERE categories_id ='.$category_id.'';
-
-        // проверяеам подключение функцией get_link_db и в $items_array выводим массив карточек(лотов)
-        $link_result = get_link_db($link, $lots_sql);
-        if ($link_result) {
-            $items_array = mysqli_fetch_all($link_result);
-
-            // функция пагинации /на входе массив карточек(лотов), кол-во карточек на странице, текущая страница из GET
-            $pagination_result = get_pagination($items_array, $page_items, $cur_page);
-
-            $pages_count = $pagination_result['pages_count'];
-            $offset = $pagination_result['offset'];
-            $pages = $pagination_result['pages'];
-        }
-
-
-
         $category_sql = 'SELECT lots.id, creation_date, end_date, lot_name, image, start_price, category_name FROM lots 
-JOIN categories ON categories.id = lots.categories_id WHERE lots.categories_id = ? ORDER BY creation_date DESC LIMIT ' . $page_items . ' OFFSET ' . $offset.'';
+JOIN categories ON categories.id = lots.categories_id WHERE lots.categories_id = ? ORDER BY creation_date DESC';
 
         $stmt = db_get_prepare_stmt($link, $category_sql, [$category_id]);
         mysqli_stmt_execute($stmt);
@@ -46,9 +29,17 @@ JOIN categories ON categories.id = lots.categories_id WHERE lots.categories_id =
         $lots_list = mysqli_fetch_all($result, MYSQLI_ASSOC);
         $error = '';
 
+        // пагинация поиска
+        $page_items = 6 ;
+        $all_rows = count($lots_list);
+        $slice_list = get_array_slice($lots_list, $page_items, $cur_page);
 
-        if (count($lots_list) > 0) {
-            $content = include_template('all-lots.php', compact('lots_list', 'categories_list', 'pages', 'pages_count', 'cur_page', 'category_id', 'category_name'));
+        $pages_count = ceil($all_rows / $page_items);
+        $pages = range(1, $pages_count);
+
+
+        if (count($slice_list) > 0) {
+            $content = include_template('all-lots.php', compact('slice_list', 'categories_list', 'pages', 'pages_count', 'cur_page', 'category_id', 'category_name'));
         } else {
             $error = 'Нет запрашиваемого документа';
         }

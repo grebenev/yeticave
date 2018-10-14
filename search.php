@@ -3,8 +3,6 @@
     require_once('db.php');
     require_once('functions.php');
 
-    $title = 'Поиск';
-
     //вызовы функции показа списка категорий
     $categories_list = get_data_db($link, $categories_sql, 'list');
     $content = include_template('search.php', compact('categories_list'));
@@ -17,9 +15,8 @@
 
     // проверяем пустой ли запрос
     if (!strlen($search)) {
-
+        $pages_count = 0;
         $error = 'Не ввели поисковый запрос';
-        $content = include_template('search.php', compact('categories_list', 'error'));
 
     } else {
         // если не пустой создаем sql - запрос
@@ -27,33 +24,43 @@
         JOIN categories ON categories.id = lots.categories_id WHERE MATCH (lot_name, description) AGAINST (?)
         ORDER BY creation_date DESC";
 
-        // подготавливаем и выполняем запрос
-        $stmt = db_get_prepare_stmt($link, $search_sql, [$search]);
-        mysqli_stmt_execute($stmt);
-        $link_result = mysqli_stmt_get_result($stmt);
+        // проверка подключения к БД
+        $result = get_link_db($link, $search_sql);
 
-        // если вернулся результат, в массив его
-        if ($link_result) {
+        // подготавливаем и выполняем запрос
+        if(!$result) {
+            $stmt = db_get_prepare_stmt($link, $search_sql, [$search]);
+            mysqli_stmt_execute($stmt);
+            $link_result = mysqli_stmt_get_result($stmt);
+        }
+
+        // проверяем кол-во записей по запросу
+        $all_rows = mysqli_num_rows($link_result);
+
+        // если есть записи предаем их в массив
+        if ($all_rows) {
             $search_list = mysqli_fetch_all($link_result, MYSQLI_ASSOC);
 
-            if (count($search_list) > 0) {
+            // пагинация поиска
+            $page_items = 6;
 
-                $page_items = 6;
+            //вызываем функцию обрезания массива / на входе массив, кол-во элементов на странице, текущая страница
+            $slice_list = get_array_slice($search_list, $page_items, $cur_page);
 
-                // функция пагинации /на входе массив карточек(лотов), кол-во карточек на странице, текущая страница из GET
-                $pagination_result = get_pagination($search_list, $page_items, $cur_page);
+            $pages_count = ceil($all_rows / $page_items);
+            $pages = range(1, $pages_count);
 
-                $pages_count = $pagination_result['pages_count'];
-                $offset = $pagination_result['offset'];
-                $pages = $pagination_result['pages'];
-
-
-                $content = include_template('search.php', compact('categories_list', 'search_list', 'search', 'error', 'pages', 'pages_count', 'cur_page'));
-
-            } else {
-                $error = 'Ничего не найдено';
-            }
+        } else {
+            $error = 'Ничего не найдено';
         }
+
+    }
+    if (!$error) {
+        $title = $search;
+        $content = include_template('search.php', compact('categories_list', 'slice_list', 'search', 'error', 'pages', 'pages_count', 'cur_page'));
+    } else {
+        $title = $error;
+        $content = include_template('search.php', compact('categories_list', 'error'));
     }
 
     $layout_content = include_template('layout.php', compact('content', 'categories_list', 'title'));
