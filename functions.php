@@ -6,7 +6,8 @@
     $categories_sql = 'SELECT id, category_name, class_name FROM categories';
 
     // функция шаблонизации
-    function include_template($name, $data) {
+    function include_template($name, $data)
+    {
         $name = 'templates/' . $name;
         $result = '';
         if (!file_exists($name)) {
@@ -20,7 +21,8 @@
     }
 
     // функция форматирования цены
-    function transform_format($number) {
+    function transform_format($number)
+    {
         $integer = ceil($number);
         if ($integer > 1000) {
             $integer = number_format($integer, 0, '', ' ');
@@ -29,7 +31,8 @@
     }
 
     // функция времени существования лота
-    function time_to_end($lot_time_end) {// текущий timestamp
+    function time_to_end($lot_time_end)
+    {// текущий timestamp
 
         if (strtotime($lot_time_end) < time()) {
             return '00:00';
@@ -38,22 +41,28 @@
         $remain = $dt_end->diff(new DateTime());
         if ($remain->d > 0) {
             return $remain->d . ' дней';
-        } else if ($remain->h > 0) {
-            return $remain->h . ' часов';
-        } else if ($remain->i > 0) {
-            return $remain->i . ' мин.';
         } else {
-            return $remain->s . ' сек.';
+            if ($remain->h > 0) {
+                return $remain->h . ' часов';
+            } else {
+                if ($remain->i > 0) {
+                    return $remain->i . ' мин.';
+                } else {
+                    return $remain->s . ' сек.';
+                }
+            }
         }
     }
 
     // функция вывода ошибок
-    function show_error(&$content, $error) {
+    function show_error(&$content, $error)
+    {
         $content = include_template('error.php', ['error' => $error]);
     }
 
     // функция подключения к базе
-    function get_link_db($link, $sql) {
+    function get_link_db($link, $sql)
+    {
         if (!$link) {
             $error = mysqli_connect_error();
             show_error($content, $error);
@@ -69,7 +78,8 @@
     }
 
     // функция получения данных из базы
-    function get_data_db($link, $sql, $flag) {
+    function get_data_db($link, $sql, $flag)
+    {
 
         $link_result = get_link_db($link, $sql);
 
@@ -92,7 +102,8 @@
      *
      * @return mysqli_stmt Подготовленное выражение
      */
-    function db_get_prepare_stmt($link, $sql, $data = []) {
+    function db_get_prepare_stmt($link, $sql, $data = [])
+    {
         $stmt = mysqli_prepare($link, $sql);
         if ($stmt == false) {
             die("<pre>MYSQL ERROR:" . mysqli_error($link) . PHP_EQL . $sql . "</pre>");
@@ -107,10 +118,14 @@
 
                 if (is_int($value)) {
                     $type = 'i';
-                } else if (is_string($value)) {
-                    $type = 's';
-                } else if (is_double($value)) {
-                    $type = 'd';
+                } else {
+                    if (is_string($value)) {
+                        $type = 's';
+                    } else {
+                        if (is_double($value)) {
+                            $type = 'd';
+                        }
+                    }
                 }
 
                 if ($type) {
@@ -130,7 +145,8 @@
     }
 
     // функция валидации
-    function validate_register($data, $link) {
+    function validate_register($data, $link)
+    {
         $required = ['email', 'password', 'name', 'contacts'];
         $errors = [];
 
@@ -178,7 +194,8 @@
     }
 
     // функция регистрации
-    function register($data, $link) {
+    function register($data, $link)
+    {
 
         $validate = validate_register($data, $link);
 
@@ -188,7 +205,8 @@
             $password = password_hash($data['password'], PASSWORD_DEFAULT);
             $sql = 'INSERT INTO users (registration_date, email, user_name, password, avatar, contacts)
             VALUES (NOW(), ?, ?, ?, ?, ?)';
-            $stmt = db_get_prepare_stmt($link, $sql, [$data['email'], $data['name'], $password, $data['path'], $data['contacts']]);
+            $stmt = db_get_prepare_stmt($link, $sql,
+                [$data['email'], $data['name'], $password, $data['path'], $data['contacts']]);
             $res = mysqli_stmt_execute($stmt);
 
             return true;
@@ -198,7 +216,8 @@
     }
 
     // функция форматирования времени для списка ставок
-    function time_left($time_in) {
+    function time_left($time_in)
+    {
         $time = strtotime($time_in);
 
         $month = date('n', $time); // присваиваем месяц от timestamp
@@ -222,7 +241,8 @@
     }
 
     // функция определения количества ставок от юзера
-    function count_users_bets($bets_array, $user_id) {
+    function count_users_bets($bets_array, $user_id)
+    {
         $count = 0;
 
         foreach ($bets_array as $key) {
@@ -235,7 +255,8 @@
     }
 
     //функция разрезания массива
-    function get_array_slice($array, $items_on_page, $current_page) {
+    function get_array_slice($array, $items_on_page, $current_page)
+    {
 
 
         $offset = ($current_page - 1) * $items_on_page;

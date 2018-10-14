@@ -16,17 +16,15 @@
     require_once('functions.php');
 
 
-
-
     // Запросы
     $lot_data_sql = 'SELECT lots.id, creation_date, lot_name, description, image, start_price, end_date, lot_step, users_id, category_name FROM 
 lots 
     JOIN categories ON categories.id = lots.categories_id WHERE lots.id = ' . $lot_show;
 
     $bet_sql = 'SELECT bets.id, bet_date, amount, users_id, user_name  FROM bets 
-    JOIN users ON users.id = bets.users_id WHERE lots_id = '. $lot_show.'  ORDER BY bet_date DESC';
+    JOIN users ON users.id = bets.users_id WHERE lots_id = ' . $lot_show . '  ORDER BY bet_date DESC';
 
-    $max_price_sql = 'SELECT MAX(amount) FROM bets WHERE lots_id = '. $lot_show.'';
+    $max_price_sql = 'SELECT MAX(amount) FROM bets WHERE lots_id = ' . $lot_show . '';
 
     //вызовы функции список категорий, данные для лота, список ставок, максимальная ставка
     $categories_list = get_data_db($link, $categories_sql, 'list');
@@ -36,10 +34,10 @@ lots
     $error = '';
 
     // узнаем id залогиненого пользователя
-    if (isset($_SESSION['user'])){
+    if (isset($_SESSION['user'])) {
         $user_id = $_SESSION['user']['id'];
         // вызов функции посчета ставок по залогиненому id в отдельном лоте
-        $total_count = count_users_bets($bet_list , $user_id);
+        $total_count = count_users_bets($bet_list, $user_id);
     }
 
     // выделяем из возвращенного массива цену и шаг
@@ -49,19 +47,18 @@ lots
     $max = $max_price['MAX(amount)'];
 
 
-    if($max > $start_price) {
-        $current_price =  $max;
+    if ($max > $start_price) {
+        $current_price = $max;
     } else {
-        $current_price =  $start_price;
+        $current_price = $start_price;
     }
-
 
 
     // проверяем данные в массиве POST
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $cost = $_POST['cost'];
 
-        if(empty($cost)){
+        if (empty($cost)) {
             $error_bet = 'Надо заполнить';
 
         } else {//если не пуст
@@ -72,11 +69,11 @@ lots
 
             } else {//если число
 
-                if($cost >= $current_price + $step) { //проверяем что больше чем цена + шаг
+                if ($cost >= $current_price + $step) { //проверяем что больше чем цена + шаг
 
                     $user_id = $_SESSION['user']['id'];
-                    $bet_sql = 'INSERT INTO bets (bet_date, amount, users_id, lots_id) VALUES (NOW(), ?, ' .$user_id.', 
-                '.$lot_show.')';
+                    $bet_sql = 'INSERT INTO bets (bet_date, amount, users_id, lots_id) VALUES (NOW(), ?, ' . $user_id . ', 
+                ' . $lot_show . ')';
 
                     //подготавливаем выражение и выполняем
                     $stmt = db_get_prepare_stmt($link, $bet_sql, [$cost]);
@@ -97,17 +94,17 @@ lots
     }
 
 
-
     if (!isset($lot_data)) {
         http_response_code(404);
         $error = 'Ошибка 404';
 
     } else {
 
-        $content = include_template('lot.php', compact('lot_data', 'bet_list', 'categories_list', 'error_bet', 'total_count' ,'current_price'));
+        $content = include_template('lot.php',
+            compact('lot_data', 'bet_list', 'categories_list', 'error_bet', 'total_count', 'current_price'));
 
     }
-    if($error) {
+    if ($error) {
         $content = include_template('error.php', compact('error'));
     }
 

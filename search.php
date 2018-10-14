@@ -28,7 +28,7 @@
         $result = get_link_db($link, $search_sql);
 
         // подготавливаем и выполняем запрос
-        if(!$result) {
+        if (!$result) {
             $stmt = db_get_prepare_stmt($link, $search_sql, [$search]);
             mysqli_stmt_execute($stmt);
             $link_result = mysqli_stmt_get_result($stmt);
@@ -57,7 +57,8 @@
     }
     if (!$error) {
         $title = $search;
-        $content = include_template('search.php', compact('categories_list', 'slice_list', 'search', 'error', 'pages', 'pages_count', 'cur_page'));
+        $content = include_template('search.php',
+            compact('categories_list', 'slice_list', 'search', 'error', 'pages', 'pages_count', 'cur_page'));
     } else {
         $title = $error;
         $content = include_template('search.php', compact('categories_list', 'error'));

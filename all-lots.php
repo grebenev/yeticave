@@ -15,9 +15,9 @@
 
     if ($category_id) {
         // добываем нужное нам имя из таблицы категорий
-        $category_result = mysqli_query($link, 'SELECT category_name FROM categories WHERE id ='.$category_id.'');
+        $category_result = mysqli_query($link, 'SELECT category_name FROM categories WHERE id =' . $category_id . '');
         $category_name = mysqli_fetch_assoc($category_result)['category_name'];
-        $title = 'Все лоты в категории «'.$category_name.'»';
+        $title = 'Все лоты в категории «' . $category_name . '»';
 
         $category_sql = 'SELECT lots.id, creation_date, end_date, lot_name, image, start_price, category_name FROM lots 
 JOIN categories ON categories.id = lots.categories_id WHERE lots.categories_id = ? ORDER BY creation_date DESC';
@@ -30,7 +30,7 @@ JOIN categories ON categories.id = lots.categories_id WHERE lots.categories_id =
         $error = '';
 
         // пагинация поиска
-        $page_items = 6 ;
+        $page_items = 6;
         $all_rows = count($lots_list);
         $slice_list = get_array_slice($lots_list, $page_items, $cur_page);
 
@@ -39,7 +39,9 @@ JOIN categories ON categories.id = lots.categories_id WHERE lots.categories_id =
 
 
         if (count($slice_list) > 0) {
-            $content = include_template('all-lots.php', compact('slice_list', 'categories_list', 'pages', 'pages_count', 'cur_page', 'category_id', 'category_name'));
+            $content = include_template('all-lots.php',
+                compact('slice_list', 'categories_list', 'pages', 'pages_count', 'cur_page', 'category_id',
+                    'category_name'));
         } else {
             $error = 'Нет запрашиваемого документа';
         }
