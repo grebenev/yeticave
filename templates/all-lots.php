@@ -3,7 +3,7 @@
     <section class="lots">
         <h2>Все лоты в категории <span>«<?=$category_name; ?>»</span></h2>
         <ul class="lots__list">
-            <?php foreach ($lots_list as $key):
+            <?php foreach ($slice_list as $key):
             $spend_time= strtotime($key['end_date']);
             if(time() < $spend_time): ?>
                 <li class="lots__item lot">
