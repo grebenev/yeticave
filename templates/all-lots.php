@@ -32,6 +32,7 @@
 
         </ul>
     </section>
+    <?php if ($pages_count > 1): ?>
     <?= include_template('pagination_block.php', [
         'pages' => $pages,
         'pages_count' => $pages_count,
@@ -39,4 +40,5 @@
             $cur_page,
         'category_id' => $category_id
     ]); ?>
+    <?php endif; ?>
 </div>

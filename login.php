@@ -53,10 +53,6 @@
     } else {
         if (isset($_SESSION['user'])) {
 
-            //проверим существование нужной куки
-            if (isset($_COOKIE['save_id'])) {
-                $url_id = $_COOKIE['save_id'];
-            }
             $username = $_SESSION['user']['user_name'];
             header("Location: /");
 

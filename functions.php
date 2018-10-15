@@ -1,5 +1,5 @@
 <?php
-    // установка локали
+    // установка локальной зоны
     date_default_timezone_set("Europe/Moscow");
 
     //запрос для вывода категорий по всем вложенным страницам
@@ -32,8 +32,7 @@
 
     // функция времени существования лота
     function time_to_end($lot_time_end)
-    {// текущий timestamp
-
+    {
         if (strtotime($lot_time_end) < time()) {
             return '00:00';
         }
@@ -63,7 +62,7 @@
     // функция подключения к базе
     function get_link_db($link, $sql)
     {
-        if (!$link) {
+        if (!isset($link)) {
             $error = mysqli_connect_error();
             show_error($content, $error);
         } else {
@@ -83,7 +82,7 @@
 
         $link_result = get_link_db($link, $sql);
 
-        if ($link_result) {
+        if (isset($link_result)) {
             if ($flag == 'list') {
                 return $list = mysqli_fetch_all($link_result, MYSQLI_ASSOC);
             }

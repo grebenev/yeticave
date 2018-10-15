@@ -38,7 +38,6 @@
         foreach ($required_int as $key) {
             if (!filter_var($lot[$key], FILTER_VALIDATE_INT)) {
                 $errors[$key] = 'Это не число';
-
             }
         }
 
@@ -69,9 +68,12 @@
         }
 
         //проверка даты
-        if (strtotime($lot['date']) < (time() + (60 * 60 * 24))) {
-            $errors['date'] = 'Дата должна быть больше';
-        };
+        if(isset($lot['date'])) {
+            if (strtotime($lot['date']) < (time() + (60 * 60 * 24))) {
+                $errors['date'] = 'Дата должна быть больше';
+            };
+        }
+
 
         if (count($errors) > 0) {
             $content = include_template('add.php', compact('categories_list', 'lot', 'errors', 'dict'));
@@ -93,9 +95,9 @@
                 $lot['step'],
                 $lot_data
             ]);
-            $res = mysqli_stmt_execute($stmt); // выполняем подготовленное выражение
+            $result = mysqli_stmt_execute($stmt); // выполняем подготовленное выражение
 
-            if ($res) {
+            if ($result) {
                 $lot_id = mysqli_insert_id($link); //присваивает последний, добавленный id
 
                 header("Location: lot.php?lot=" . $lot_id); //пренаправляет на последний id

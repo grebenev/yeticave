@@ -7,10 +7,6 @@
     $expire = strtotime("+3 minutes");
     $path = "/";
 
-    if (isset($_COOKIE['save_id'])) {
-        $url_id = $lot_show;
-    }
-    setcookie($cookie_name, $url_id, $expire, $path);
 
     require_once('db.php');
     require_once('functions.php');
@@ -56,7 +52,9 @@ lots
 
     // проверяем данные в массиве POST
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        $cost = $_POST['cost'];
+        if (isset($_POST['cost'])) {
+            $cost = $_POST['cost'];
+        }
 
         if (empty($cost)) {
             $error_bet = 'Надо заполнить';
@@ -77,9 +75,9 @@ lots
 
                     //подготавливаем выражение и выполняем
                     $stmt = db_get_prepare_stmt($link, $bet_sql, [$cost]);
-                    $res = mysqli_stmt_execute($stmt);
+                    $result = mysqli_stmt_execute($stmt);
 
-                    if ($res) {
+                    if ($result) {
                         header("Location: lot.php?lot=" . $lot_show);
 
                     } else {
@@ -108,7 +106,9 @@ lots
         $content = include_template('error.php', compact('error'));
     }
 
-    $title = $lot_data['lot_name'];
+    if(isset($lot_data['lot_name'])) {
+        $title = $lot_data['lot_name'];
+    }
 
     $layout_content = include_template('layout.php', compact('content', 'categories_list', 'title'));
     print($layout_content);
