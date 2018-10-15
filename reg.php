@@ -11,7 +11,11 @@
     $content = include_template('reg.php', compact('categories_list', 'reg'));
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        $reg = $_POST['reg'];
+
+        if(isset($_POST['reg'])) {
+            $reg = $_POST['reg'];
+        }
+
         $dict = [
             'email' => 'Почта',
             'password' => 'Пароль',

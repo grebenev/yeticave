@@ -1,20 +1,11 @@
 <?php
     session_start();
-    $lot_show = intval($_GET['lot']);
-
-    $cookie_name = "save_id";
-    $url_id = $lot_show;
-    $expire = strtotime("+3 minutes");
-    $path = "/";
-
-    if (isset($_COOKIE['save_id'])) {
-        $url_id = $lot_show;
+    if(isset($_GET['lot'])) {
+        $lot_show = intval($_GET['lot']);
     }
-    setcookie($cookie_name, $url_id, $expire, $path);
 
     require_once('db.php');
     require_once('functions.php');
-
 
     // Запросы
     $lot_data_sql = 'SELECT lots.id, creation_date, lot_name, description, image, start_price, end_date, lot_step, users_id, category_name FROM 
@@ -41,11 +32,13 @@ lots
     }
 
     // выделяем из возвращенного массива цену и шаг
-    $start_price = $lot_data['start_price'];
-    $step = $lot_data['lot_step'];
-    $current_price = 0;
-    $max = $max_price['MAX(amount)'];
+    if(isset($lot_data)) {
+        $start_price = $lot_data['start_price'];
+        $step = $lot_data['lot_step'];
+        $max = $max_price['MAX(amount)'];
+    }
 
+    $current_price = 0;
 
     if ($max > $start_price) {
         $current_price = $max;
@@ -56,7 +49,9 @@ lots
 
     // проверяем данные в массиве POST
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        $cost = $_POST['cost'];
+        if (isset($_POST['cost'])) {
+            $cost = $_POST['cost'];
+        }
 
         if (empty($cost)) {
             $error_bet = 'Надо заполнить';
@@ -71,15 +66,18 @@ lots
 
                 if ($cost >= $current_price + $step) { //проверяем что больше чем цена + шаг
 
-                    $user_id = $_SESSION['user']['id'];
+                    if(isset($_SESSION['user']['id'])) {
+                        $user_id = $_SESSION['user']['id'];
+                    }
+
                     $bet_sql = 'INSERT INTO bets (bet_date, amount, users_id, lots_id) VALUES (NOW(), ?, ' . $user_id . ', 
                 ' . $lot_show . ')';
 
                     //подготавливаем выражение и выполняем
                     $stmt = db_get_prepare_stmt($link, $bet_sql, [$cost]);
-                    $res = mysqli_stmt_execute($stmt);
+                    $result = mysqli_stmt_execute($stmt);
 
-                    if ($res) {
+                    if ($result) {
                         header("Location: lot.php?lot=" . $lot_show);
 
                     } else {
@@ -108,7 +106,9 @@ lots
         $content = include_template('error.php', compact('error'));
     }
 
-    $title = $lot_data['lot_name'];
+    if(isset($lot_data['lot_name'])) {
+        $title = $lot_data['lot_name'];
+    }
 
     $layout_content = include_template('layout.php', compact('content', 'categories_list', 'title'));
     print($layout_content);

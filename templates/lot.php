@@ -31,7 +31,7 @@
                             <p class="lot-item__form-item">
                                 <label for="cost">Ваша ставка</label>
                                 <?php $placeholder = isset($error_bet) ? $error_bet : htmlspecialchars($lot_data['lot_step'] + $current_price); ?>
-                                <input id="cost" type="text" name="cost" placeholder="<?= $placeholder; ?>">
+                                <input id="cost" type="number" name="cost" placeholder="<?= $placeholder; ?>">
                             </p>
                             <button type="submit" class="button">Сделать ставку</button>
                         </form>
