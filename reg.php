@@ -12,7 +12,13 @@
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $reg = $_POST['reg'];
-        $dict = ['email' => 'Почта', 'password' => 'Пароль', 'name' => 'Имя', 'contacts' => 'Контакт', 'file' => 'Изображение'];
+        $dict = [
+            'email' => 'Почта',
+            'password' => 'Пароль',
+            'name' => 'Имя',
+            'contacts' => 'Контакт',
+            'file' => 'Изображение'
+        ];
 
 
         $is_register = register($_POST['reg'], $link);
@@ -21,8 +27,10 @@
             // редирект
             header("Location: /login.php");
 
-        } else if (count($is_register) > 0) {
-            $content = include_template('reg.php', compact('categories_list', 'reg', 'is_register', 'dict'));
+        } else {
+            if (count($is_register) > 0) {
+                $content = include_template('reg.php', compact('categories_list', 'reg', 'is_register', 'dict'));
+            }
         }
     }
 

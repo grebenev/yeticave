@@ -21,7 +21,15 @@
 
 
         $required = ['name', 'message', 'category', 'price', 'step', 'date'];
-        $dict = ['name' => 'Наименование', 'message' => 'Описание', 'category' => 'Категория', 'price' => 'Начальная цена', 'step' => 'Шаг ставки', 'date' => 'Дата окончания торгов', 'file' => 'Изображение'];
+        $dict = [
+            'name' => 'Наименование',
+            'message' => 'Описание',
+            'category' => 'Категория',
+            'price' => 'Начальная цена',
+            'step' => 'Шаг ставки',
+            'date' => 'Дата окончания торгов',
+            'file' => 'Изображение'
+        ];
         $errors = [];
 
         // проверка числа
@@ -45,7 +53,7 @@
         if (!empty($_FILES['jpg_image']['name'])) {
             $tmp_name = $_FILES['jpg_image']['tmp_name'];
 
-            $file_type = mime_content_type ($tmp_name);
+            $file_type = mime_content_type($tmp_name);
 
             if (!in_array($file_type, ['image/jpeg', 'image/png'])) {
                 $errors['file'] = 'Загрузите картинку в формате JPEG или PNG';
@@ -61,7 +69,7 @@
         }
 
         //проверка даты
-        if(strtotime($lot['date']) < (time() + (60 * 60 * 24))) {
+        if (strtotime($lot['date']) < (time() + (60 * 60 * 24))) {
             $errors['date'] = 'Дата должна быть больше';
         };
 
@@ -73,11 +81,18 @@
             $user_id = $_SESSION['user']['id'];
 
             $sql = 'INSERT INTO lots (creation_date, categories_id, lot_name, description, image, start_price, lot_step, users_id, end_date)
-            VALUES (NOW(), ?, ?, ?, ?, ?, ?, '.$user_id.', ?)';
-            $lot_data = $lot['date'].' '.date("H:i:s");
+            VALUES (NOW(), ?, ?, ?, ?, ?, ?, ' . $user_id . ', ?)';
+            $lot_data = $lot['date'] . ' ' . date("H:i:s");
 
-            $stmt = db_get_prepare_stmt($link, $sql, [$lot['category'], $lot['name'], $lot['message'],
-                $lot['path'], $lot['price'], $lot['step'], $lot_data]);
+            $stmt = db_get_prepare_stmt($link, $sql, [
+                $lot['category'],
+                $lot['name'],
+                $lot['message'],
+                $lot['path'],
+                $lot['price'],
+                $lot['step'],
+                $lot_data
+            ]);
             $res = mysqli_stmt_execute($stmt); // выполняем подготовленное выражение
 
             if ($res) {
