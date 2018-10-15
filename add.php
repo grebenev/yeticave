@@ -68,10 +68,8 @@
         }
 
         //проверка даты
-        if(isset($lot['date'])) {
-            if (strtotime($lot['date']) < (time() + (60 * 60 * 24))) {
-                $errors['date'] = 'Дата должна быть больше';
-            };
+        if (isset($lot['date']) and (strtotime($lot['date']) < (time() + (60 * 60 * 24)))) {
+            $errors['date'] = 'Дата должна быть больше';
         }
 
 

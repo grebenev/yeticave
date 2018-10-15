@@ -82,13 +82,11 @@
 
         $link_result = get_link_db($link, $sql);
 
-        if (isset($link_result)) {
-            if ($flag == 'list') {
-                return $list = mysqli_fetch_all($link_result, MYSQLI_ASSOC);
-            }
-            if ($flag == 'item') {
-                return $list = mysqli_fetch_assoc($link_result);
-            }
+        if ($flag == 'list') {
+            return $list = mysqli_fetch_all($link_result, MYSQLI_ASSOC);
+        }
+        if ($flag == 'item') {
+            return $list = mysqli_fetch_assoc($link_result);
         }
     }
 
