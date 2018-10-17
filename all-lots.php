@@ -31,7 +31,18 @@ JOIN categories ON categories.id = lots.categories_id WHERE lots.categories_id =
 
         // пагинация поиска
         $page_items = 6;
-        $all_rows = count($lots_list);
+        $count = 0;
+
+        //проверка времени истечения
+        foreach ($lots_list as $key) {
+           $time =  time_to_end($key['end_date']);
+           if($time !== '00:00') {
+               $count ++;
+           }
+        }
+        $all_rows = $count;
+
+
         $slice_list = get_array_slice($lots_list, $page_items, $cur_page);
 
         $pages_count = ceil($all_rows / $page_items);
