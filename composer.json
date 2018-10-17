@@ -1,0 +1,12 @@
+{
+    "name": "konstantin/yeticave",
+    "authors": [
+        {
+            "name": "Константин",
+            "email": "3304040@gmail.com"
+        }
+    ],
+    "require": {
+        "swiftmailer/swiftmailer": "^6.1"
+    }
+}
