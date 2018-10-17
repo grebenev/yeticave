@@ -6,9 +6,10 @@
 
     $title = 'Мои ставки';
 
-    if (isset($_SESSION['user'])) {
+    if(isset($_SESSION['user']['id']) and !empty($_SESSION['user']['id'])) {
         $user_id = $_SESSION['user']['id'];
     }
+
 
     //вызовы функции
     $categories_list = get_data_db($link, $categories_sql, 'list');

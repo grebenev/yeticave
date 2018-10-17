@@ -1,6 +1,6 @@
 <?php
     session_start();
-    if(isset($_GET['lot'])) {
+    if(isset($_GET['lot']) and !empty($_GET['lot'])) {
         $lot_show = intval($_GET['lot']);
     }
 
@@ -25,7 +25,7 @@ lots
     $error = '';
 
     // узнаем id залогиненого пользователя
-    if (isset($_SESSION['user'])) {
+    if (isset($_SESSION['user']) and !empty($_SESSION['user'])) {
         $user_id = $_SESSION['user']['id'];
         // вызов функции посчета ставок по залогиненому id в отдельном лоте
         $total_count = count_users_bets($bet_list, $user_id);
@@ -48,8 +48,8 @@ lots
 
 
     // проверяем данные в массиве POST
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        if (isset($_POST['cost'])) {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if (isset($_POST['cost']) and !empty($_POST['cost'])) {
             $cost = $_POST['cost'];
         }
 
@@ -66,7 +66,7 @@ lots
 
                 if ($cost >= $current_price + $step) { //проверяем что больше чем цена + шаг
 
-                    if(isset($_SESSION['user']['id'])) {
+                    if(isset($_SESSION['user']['id']) and !empty($_SESSION['user']['id'])) {
                         $user_id = $_SESSION['user']['id'];
                     }
 

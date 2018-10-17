@@ -16,8 +16,10 @@
 
     $content = include_template('add.php', compact('categories_list'));
 
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        $lot = $_POST['lot'];
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if (isset($_POST['lot']) and !empty($_POST['lot'])) {
+            $lot = $_POST['lot'];
+        }
 
 
         $required = ['name', 'message', 'category', 'price', 'step', 'date'];
@@ -78,7 +80,9 @@
         } else {
 
             // Если не ошибок добавляем в базу
-            $user_id = $_SESSION['user']['id'];
+            if(isset($_SESSION['user']['id']) and !empty($_SESSION['user']['id'])) {
+                $user_id = $_SESSION['user']['id'];
+            }
 
             $sql = 'INSERT INTO lots (creation_date, categories_id, lot_name, description, image, start_price, lot_step, users_id, end_date)
             VALUES (NOW(), ?, ?, ?, ?, ?, ?, ' . $user_id . ', ?)';

@@ -10,8 +10,10 @@
     $content = include_template('login.php', compact('categories_list'));
 
 
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        $login = $_POST['login'];
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if (isset($_POST['login']) and !empty($_POST['login'])) {
+            $login = $_POST['login'];
+        }
 
         $required = ['email', 'password'];
         $dict = ['email' => 'Почта', 'password' => 'Пароль'];
