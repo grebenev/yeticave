@@ -10,9 +10,10 @@
 
     $content = include_template('reg.php', compact('categories_list', 'reg'));
 
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-        if(isset($_POST['reg'])) {
+
+        if (isset($_POST['reg']) and !empty($_POST['reg'])) {
             $reg = $_POST['reg'];
         }
 
