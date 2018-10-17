@@ -82,10 +82,10 @@
 
         $link_result = get_link_db($link, $sql);
 
-        if ($flag == 'list') {
+        if ($flag === 'list') {
             return $list = mysqli_fetch_all($link_result, MYSQLI_ASSOC);
         }
-        if ($flag == 'item') {
+        if ($flag === 'item') {
             return $list = mysqli_fetch_assoc($link_result);
         }
     }
@@ -102,7 +102,7 @@
     function db_get_prepare_stmt($link, $sql, $data = [])
     {
         $stmt = mysqli_prepare($link, $sql);
-        if ($stmt == false) {
+        if ($stmt === false) {
             die("<pre>MYSQL ERROR:" . mysqli_error($link) . PHP_EQL . $sql . "</pre>");
         }
 
@@ -244,7 +244,7 @@
 
         foreach ($bets_array as $key) {
 
-            if ($key['users_id'] == $user_id) {
+            if ($key['users_id'] === $user_id) {
                 $count++;
             }
         }
