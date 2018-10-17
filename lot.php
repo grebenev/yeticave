@@ -46,6 +46,10 @@ lots
         $current_price = $start_price;
     }
 
+    if(isset($_SESSION['user']['id']) and !empty($_SESSION['user']['id'])) {
+        $user_id = $_SESSION['user']['id'];
+    }
+
 
     // проверяем данные в массиве POST
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -58,37 +62,35 @@ lots
 
         } else {//если не пуст
             $error_bet = '';
-
             if (!filter_var($cost, FILTER_VALIDATE_INT)) {
                 $error_bet = 'Это не число';
+                $flag = 0;
+            } else {
+                $flag = 1;
+            }
 
-            } else {//если число
-
-                if ($cost >= $current_price + $step) { //проверяем что больше чем цена + шаг
-
-                    if(isset($_SESSION['user']['id']) and !empty($_SESSION['user']['id'])) {
-                        $user_id = $_SESSION['user']['id'];
-                    }
-
-                    $bet_sql = 'INSERT INTO bets (bet_date, amount, users_id, lots_id) VALUES (NOW(), ?, ' . $user_id . ', 
-                ' . $lot_show . ')';
-
-                    //подготавливаем выражение и выполняем
-                    $stmt = db_get_prepare_stmt($link, $bet_sql, [$cost]);
-                    $result = mysqli_stmt_execute($stmt);
-
-                    if ($result) {
-                        header("Location: lot.php?lot=" . $lot_show);
-
-                    } else {
-                        $content = include_template('error.php', ['error' => mysqli_error($link)]);
-                    }
-
-                } else {
-                    $error_bet = 'Увеличте ставку';
-                }
+            if ($cost < $current_price + $step and $flag) { //проверяем что больше чем цена + шаг
+                $error_bet = 'Увеличте ставку';
             }
         }
+
+
+        if (!$error_bet) {
+            $bet_sql = 'INSERT INTO bets (bet_date, amount, users_id, lots_id) VALUES (NOW(), ?, ' . $user_id . ', 
+                ' . $lot_show . ')';
+
+            //подготавливаем выражение и выполняем
+            $stmt = db_get_prepare_stmt($link, $bet_sql, [$cost]);
+            $result = mysqli_stmt_execute($stmt);
+
+            if ($result) {
+                header("Location: lot.php?lot=" . $lot_show);
+
+            } else {
+                $content = include_template('error.php', ['error' => mysqli_error($link)]);
+            }
+        }
+
     }
 
 
