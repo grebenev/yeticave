@@ -53,7 +53,7 @@
         }
 
     } else {
-        if (isset($_SESSION['user'])) {
+        if (isset($_SESSION['user']) and !empty($_SESSION['user'])) {
 
             $username = $_SESSION['user']['user_name'];
             header("Location: /");
