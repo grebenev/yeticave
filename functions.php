@@ -20,7 +20,11 @@
         return $result;
     }
 
-    // функция форматирования цены
+    /**
+     * Фрпматирование, округление, деление по разрядам чисел, добавление знака ₽
+     * @param integer  $number Входное число
+     * @return string  отформатированная сторка
+     */
     function transform_format($number)
     {
         $integer = ceil($number);
@@ -31,6 +35,11 @@
     }
 
     // функция времени существования лота
+    /**
+     * Вычисление сколько осталось времени до входящей даты
+     * @param datetime  $lot_time_end Входное время
+     * @return string  возвращаемое время
+     */
     function time_to_end($lot_time_end)
     {
         if (strtotime($lot_time_end) < time()) {
@@ -54,12 +63,23 @@
     }
 
     // функция вывода ошибок
+    /**
+     * Вывод ошибок
+     * @param  string $content контент
+     * @param string  $error ошибки
+     */
     function show_error(&$content, $error)
     {
         $content = include_template('error.php', ['error' => $error]);
     }
 
-    // функция подключения к базе
+
+    /**
+     * Подключение к БД
+     * @param  mysqli $link Ресурс соединения
+     * @param string  $sql SQL - запрос
+     * @return object  Объект соединения
+     */
     function get_link_db($link, $sql)
     {
         if (!isset($link)) {
@@ -76,7 +96,14 @@
         }
     }
 
-    // функция получения данных из базы
+
+    /**
+     * Получения данных из БД
+     * @param  mysqli $link Ресурс соединения
+     * @param string  $sql SQL - запрос
+     * @param array  $flag  Ключи: list - маиив данных, item - одна запись из таблицы
+     * @return array  Список или одну запись
+     */
     function get_data_db($link, $sql, $flag)
     {
 
@@ -91,12 +118,10 @@
     }
 
     /**
-     * Создает подготовленное выражение на основе готового SQL запроса и переданных данных
-     *
-     * @param $link mysqli Ресурс соединения
-     * @param $sql string SQL запрос с плейсхолдерами вместо значений
-     * @param array $data Данные для вставки на место плейсхолдеров
-     *
+     * Создает подготовленное выражение на основе готового SQL запроса и переданных данных     *
+     * @param  mysqli $link Ресурс соединения
+     * @param string $sql  SQL запрос с плейсхолдерами вместо значений
+     * @param array $data Данные для вставки на место плейсхолдеров     *
      * @return mysqli_stmt Подготовленное выражение
      */
     function db_get_prepare_stmt($link, $sql, $data = [])
@@ -141,7 +166,12 @@
 
     }
 
-    // функция валидации
+    /**
+     * Валидации
+     * @param array  $data массив данных для валидации
+     * @param  mysqli $link Ресурс соединения
+     * @return string  имя файла или ошибку валидации
+     */
     function validate_register($data, $link)
     {
         $required = ['email', 'password', 'name', 'contacts'];
@@ -190,7 +220,12 @@
         }
     }
 
-    // функция регистрации
+    /**
+     * Регистрации
+     * @param array  $data массив данных для валидации
+     * @param  mysqli $link Ресурс соединения
+     * @return string  true или ошибку валидации
+     */
     function register($data, $link)
     {
 
@@ -212,7 +247,12 @@
         }
     }
 
-    // функция форматирования времени для списка ставок
+    /**
+     * Формат времени для списка ставок
+     * @param datetime  $time_in время в любом формате
+     * @return string  Форматированное время
+     */
+
     function time_left($time_in)
     {
         $time = strtotime($time_in);
@@ -237,7 +277,12 @@
         }
     }
 
-    // функция определения количества ставок от юзера
+    /**
+     * Определяет количество ставок пользователя
+     * @param array  $bets_array массив ставок
+     * @param  integer $user_id ID пользователя
+     * @return integer  количество ставок
+     */
     function count_users_bets($bets_array, $user_id)
     {
         $count = 0;
@@ -251,11 +296,15 @@
         return $count;
     }
 
-    //функция разрезания массива
+    /**
+     * Разрезает массив
+     * @param array  $array массив лотов
+     * @param  integer $items_on_page Колтчество лотов на странице
+     * @param  integer $current_page Текущая страница
+     * @return array  Часть массива
+     */
     function get_array_slice($array, $items_on_page, $current_page)
     {
-
-
         $offset = ($current_page - 1) * $items_on_page;
         $result = array_slice($array, $offset, $items_on_page);
         return $result;
