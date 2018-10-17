@@ -1,6 +1,6 @@
 <?php
     session_start();
-    if(isset($_GET['lot']) and !empty($_GET['lot'])) {
+    if (isset($_GET['lot']) and !empty($_GET['lot'])) {
         $lot_show = intval($_GET['lot']);
     }
 
@@ -32,7 +32,7 @@ lots
     }
 
     // выделяем из возвращенного массива цену и шаг
-    if(isset($lot_data)) {
+    if (isset($lot_data)) {
         $start_price = $lot_data['start_price'];
         $step = $lot_data['lot_step'];
         $max = $max_price['MAX(amount)'];
@@ -46,7 +46,7 @@ lots
         $current_price = $start_price;
     }
 
-    if(isset($_SESSION['user']['id']) and !empty($_SESSION['user']['id'])) {
+    if (isset($_SESSION['user']['id']) and !empty($_SESSION['user']['id'])) {
         $user_id = $_SESSION['user']['id'];
     }
 
@@ -108,7 +108,7 @@ lots
         $content = include_template('error.php', compact('error'));
     }
 
-    if(isset($lot_data['lot_name'])) {
+    if (isset($lot_data['lot_name'])) {
         $title = $lot_data['lot_name'];
     }
 

@@ -13,7 +13,7 @@
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
-        if(isset($_POST['reg']) and !empty($_POST['reg'])) {
+        if (isset($_POST['reg']) and !empty($_POST['reg'])) {
             $reg = $_POST['reg'];
         }
 

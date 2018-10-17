@@ -80,7 +80,7 @@
         } else {
 
             // Если не ошибок добавляем в базу
-            if(isset($_SESSION['user']['id']) and !empty($_SESSION['user']['id'])) {
+            if (isset($_SESSION['user']['id']) and !empty($_SESSION['user']['id'])) {
                 $user_id = $_SESSION['user']['id'];
             }
 

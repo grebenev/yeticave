@@ -22,7 +22,7 @@
 
     /**
      * Фрпматирование, округление, деление по разрядам чисел, добавление знака ₽
-     * @param integer  $number Входное число
+     * @param integer $number Входное число
      * @return string  отформатированная сторка
      */
     function transform_format($number)
@@ -37,7 +37,7 @@
     // функция времени существования лота
     /**
      * Вычисление сколько осталось времени до входящей даты
-     * @param datetime  $lot_time_end Входное время
+     * @param datetime $lot_time_end Входное время
      * @return string  возвращаемое время
      */
     function time_to_end($lot_time_end)
@@ -66,7 +66,7 @@
     /**
      * Вывод ошибок
      * @param  string $content контент
-     * @param string  $error ошибки
+     * @param string $error ошибки
      */
     function show_error(&$content, $error)
     {
@@ -77,7 +77,7 @@
     /**
      * Подключение к БД
      * @param  mysqli $link Ресурс соединения
-     * @param string  $sql SQL - запрос
+     * @param string $sql SQL - запрос
      * @return object  Объект соединения
      */
     function get_link_db($link, $sql)
@@ -100,8 +100,8 @@
     /**
      * Получения данных из БД
      * @param  mysqli $link Ресурс соединения
-     * @param string  $sql SQL - запрос
-     * @param array  $flag  Ключи: list - маиив данных, item - одна запись из таблицы
+     * @param string $sql SQL - запрос
+     * @param array $flag Ключи: list - маиив данных, item - одна запись из таблицы
      * @return array  Список или одну запись
      */
     function get_data_db($link, $sql, $flag)
@@ -120,7 +120,7 @@
     /**
      * Создает подготовленное выражение на основе готового SQL запроса и переданных данных     *
      * @param  mysqli $link Ресурс соединения
-     * @param string $sql  SQL запрос с плейсхолдерами вместо значений
+     * @param string $sql SQL запрос с плейсхолдерами вместо значений
      * @param array $data Данные для вставки на место плейсхолдеров     *
      * @return mysqli_stmt Подготовленное выражение
      */
@@ -168,7 +168,7 @@
 
     /**
      * Валидации
-     * @param array  $data массив данных для валидации
+     * @param array $data массив данных для валидации
      * @param  mysqli $link Ресурс соединения
      * @return string  имя файла или ошибку валидации
      */
@@ -222,7 +222,7 @@
 
     /**
      * Регистрации
-     * @param array  $data массив данных для валидации
+     * @param array $data массив данных для валидации
      * @param  mysqli $link Ресурс соединения
      * @return string  true или ошибку валидации
      */
@@ -249,7 +249,7 @@
 
     /**
      * Формат времени для списка ставок
-     * @param datetime  $time_in время в любом формате
+     * @param datetime $time_in время в любом формате
      * @return string  Форматированное время
      */
 
@@ -279,7 +279,7 @@
 
     /**
      * Определяет количество ставок пользователя
-     * @param array  $bets_array массив ставок
+     * @param array $bets_array массив ставок
      * @param  integer $user_id ID пользователя
      * @return integer  количество ставок
      */
@@ -298,7 +298,7 @@
 
     /**
      * Разрезает массив
-     * @param array  $array массив лотов
+     * @param array $array массив лотов
      * @param  integer $items_on_page Колтчество лотов на странице
      * @param  integer $current_page Текущая страница
      * @return array  Часть массива

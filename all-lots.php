@@ -35,10 +35,10 @@ JOIN categories ON categories.id = lots.categories_id WHERE lots.categories_id =
 
         //проверка времени истечения
         foreach ($lots_list as $key) {
-           $time =  time_to_end($key['end_date']);
-           if($time !== '00:00') {
-               $count ++;
-           }
+            $time = time_to_end($key['end_date']);
+            if ($time !== '00:00') {
+                $count++;
+            }
         }
         $all_rows = $count;
 

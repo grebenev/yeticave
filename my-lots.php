@@ -6,7 +6,7 @@
 
     $title = 'Мои ставки';
 
-    if(isset($_SESSION['user']['id']) and !empty($_SESSION['user']['id'])) {
+    if (isset($_SESSION['user']['id']) and !empty($_SESSION['user']['id'])) {
         $user_id = $_SESSION['user']['id'];
     }
 
@@ -18,7 +18,7 @@
 JOIN lots ON lots.id = bets.lots_id
 JOIN categories ON categories.id = categories_id
 JOIN users ON users.id = bets.users_id
-WHERE bets.users_id = '.$user_id.'  ORDER BY bet_date ASC';
+WHERE bets.users_id = ' . $user_id . '  ORDER BY bet_date ASC';
 
     $bet_list = get_data_db($link, $bet_sql, 'list');
 //    var_dump($bet_list);
