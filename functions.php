@@ -5,7 +5,12 @@
     //запрос для вывода категорий по всем вложенным страницам
     $categories_sql = 'SELECT id, category_name, class_name FROM categories';
 
-    // функция шаблонизации
+    /**
+     * Вставляет переменные в шаблон
+     * @param integer $name название шаблона
+     * @param array $data данные для шаблона
+     * @return string  возвращает щаблон с данными
+     */
     function include_template($name, $data)
     {
         $name = 'templates/' . $name;
@@ -308,6 +313,35 @@
         $offset = ($current_page - 1) * $items_on_page;
         $result = array_slice($array, $offset, $items_on_page);
         return $result;
+    }
+
+    /**
+     * Проверяет пользователя и его пароль
+     * @param  mysqli $link Ресурс соединения
+     * @param  integer $login Полученный логин
+     * @param  integer $password Полученный пароль
+     * @return array  Ошибку проверки
+     */
+    function user_verify ($link, $login, $password) {
+
+        $email = mysqli_real_escape_string($link, $login);
+        $sql = "SELECT * FROM users WHERE email = '$email'";
+        $result = mysqli_query($link, $sql);
+        $error =[];
+
+        $user = $result ? mysqli_fetch_array($result, MYSQLI_ASSOC) : null;
+
+        if ($user) {
+            if (password_verify($password, $user['password'])) {
+                $_SESSION['user'] = $user;
+            } else {
+                $error['password'] = 'Неверный пароль';
+              return $error;
+            }
+        } else {
+            $error['email'] = 'Такой пользователь не найден';
+           return $error;
+        }
     }
 
 

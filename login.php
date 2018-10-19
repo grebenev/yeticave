@@ -25,23 +25,9 @@
             }
         }
 
+
         if (!count($errors)) {
-
-            $email = mysqli_real_escape_string($link, $login['email']);
-            $sql = "SELECT * FROM users WHERE email = '$email'";
-            $res = mysqli_query($link, $sql);
-
-            $user = $res ? mysqli_fetch_array($res, MYSQLI_ASSOC) : null;
-
-            if ($user) {
-                if (password_verify($login['password'], $user['password'])) {
-                    $_SESSION['user'] = $user;
-                } else {
-                    $errors['password'] = 'Неверный пароль';
-                }
-            } else {
-                $errors['email'] = 'Такой пользователь не найден';
-            }
+            $errors = user_verify($link, $login['email'], $login['password']);
         }
 
 
